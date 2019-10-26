@@ -1,0 +1,20 @@
+public class Brain{
+    public static final String [] MENU_CATALOGO = {"1. Mostrar Inventario \n2. Mostrar una imagen por numero de figura \n3. Mostrar imagenes que tienen una cantidad de manchas en un rango especifico \n4. Mostrar imagenes que tienen una escala en un rango especifico \n5. Mostrar las imagenes que tienen una dimension original en un rango especifico \n6. Mostrar las imagenes que tienen un area en un rango especifico \n7. Salir"};
+    public static final int VACIO = -1;
+    public static final int FONDO = 0;
+    public static final int BORDE = 1;
+    public static final int FONDO_FIGURA = 2;
+    public static final int MANCHA = 3;
+    private Analizador analizador;
+    private Inventario inventario;
+    private Interfaz interfaz; 
+    
+    public Brain(){
+        analizador = new Analizador();
+    }
+    
+    public void run(int[][] imagen ){
+        analizador.crearControl(imagen);
+        
+    }
+}
