@@ -1,0 +1,85 @@
+public class Catalogo{
+    private Dibujo [] catalogo;
+    private Inventario inventario;
+    public Catalogo(int n){
+        catalogo[n] = new Dibujo();
+    }
+
+    public boolean posicionValida(int p){
+        return (catalogo!=null && p>=0 && p<catalogo.length);
+    }
+    
+    public void ordenarManchas(){
+        int elMasMenor = 0;
+        for(int i=0; i<catalogo.length; ++i){
+            elMasMenor = posMenorManchas(i, catalogo.length-1);
+            swap(i, elMasMenor);
+        }
+        toString();
+    }
+    
+    public int posMenorManchas(int inicio, int fin){
+        int menor = -1;
+        if(posicionValida(inicio) && posicionValida(fin)){
+            if(inicio==fin){
+                menor = fin;
+            }
+            else{
+                menor = posMenorManchas(inicio+1, fin);
+                if(catalogo[inicio].getManchas()<catalogo[menor].getManchas()){
+                    menor = inicio;
+                }
+            }
+        }
+        return menor;
+    }
+    
+    public String toString(int opcion,int numero, int min, int max, int minAlto, int maxAlto){
+        String tira = "";
+        int o=1;
+        switch(opcion){
+            case 1:
+                for(int i=0; i<catalogo.length; ++i){
+                    catalogo[i].setNumero(o++);
+                    tira+="\t"+inventario[i];
+                }
+            break;
+            case 2:
+                for(int i=0; i<catalogo.length; ++i){
+                    if(numero == catalogo[i].getNumero()){
+                        tira+=catalogo[i];
+                    }
+                }
+            break;
+            case 3:
+                for(int i=0; i<catalogo.length; ++i){
+                    if(min<=catalogo[i].getManchas() && catalogo[i].getManchas()<=max){
+                        tira+=catalogo[i];
+                    }
+                }
+            break;
+            case 4:
+                for(int i=0; i<catalogo.length; ++i){
+                    if(min<=catalogo[i].getZoom() && catalogo[i].getZoom()<=max){
+                        tira+=catalogo[i];
+                    }
+                }
+            break;
+            case 5:
+                for(int i=0; i<catalogo.length; ++i){
+                    if((min<=catalogo[i].getAncho() && max>=catalogo[i].getAncho())&&(minAlto<=catalogo[i].getAltura() && maxAlto>=catalogo[i].getAltura())){
+                        tira+=catalogo[i];
+                    }
+                }
+            break;
+            case 6:
+                for(int i=0; i<catalogo.length; ++i){
+                   if(min<=catalogo[i].getArea() && max>=catalogo[i].getArea()){
+                       tira+=catalogo[i];
+                   }
+                }
+        }
+        return tira;
+    }
+    
+}
