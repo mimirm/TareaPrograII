@@ -1,0 +1,27 @@
+
+public class inundador{
+    public static final int [] SUMA_F = { -1,-1, 0, 1, 1, 1, 0,-1 };
+    public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
+    public static final String [] DIRECCION = {"N ","NE","E ","SE","S ","SO","O ","NO"}; 
+    int vacio = -1;
+    
+    public boolean estaInundado( int[][] control, int c, int f){
+        return (control[f][c]!=vacio);
+    }
+    public boolean direccionValida(int f, int c, int d, int[][] matriz){
+        return matriz != null && f+SUMA_F[d] >= 0 && f+SUMA_F[d] < matriz.length && c+SUMA_C[d] >= 0 && c+SUMA_C[d] < matriz[f].length;
+    }
+    
+    
+    public void inundar(int f, int c, int[][] imagen, int[][] control, int colorI, int colorF){
+        if(imagen[f][c]==colorI && !estaInundado(control, f, c ) ){
+            control[f][c] = colorF;
+            for(int d = 0; d<7; d+=2){
+                if(direccionValida(f, c, d, control) && !estaInundado(control, f+d, c+d)){
+                    inundar(f+SUMA_F[d], c+SUMA_C[d], imagen, control, colorI, colorF);
+                }
+            }
+        }
+        
+    }
+}
