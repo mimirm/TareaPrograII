@@ -1,0 +1,36 @@
+import javax.swing.JOptionPane;
+public class Interfaz {
+
+     /*
+     *   @Funcion: Este metodo le muestra el mensaje al usuario
+     *   @Param: String mensaje que contiene el mensaje que se desea mostrar
+     */
+    public void displayMessage(String mensaje){
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
+
+    /*
+     *   @Funcion: Muestra al usuario un mensaje, le pide a este
+     *             que ingrese la informacion deseada.
+     *   @Param: String mensaje que contiene el mensaje que se desea mostrar
+     *   @Return: String entrada que contiene lo que el usurio ingreso ante la pregunta.
+     */
+    public int askInt(String mensaje){
+        int numero = 14;
+        String entrada = JOptionPane.showInputDialog(
+                null,
+                mensaje,
+                JOptionPane.QUESTION_MESSAGE);
+        try{
+           numero = Integer.parseInt(entrada);
+        }
+        catch(Exception e){
+           JOptionPane.showInputDialog(
+                null,
+                "Error!! Entrada invalida, intente de nuevo.",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        return numero;
+    }
+
+}
