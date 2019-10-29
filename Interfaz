@@ -5,7 +5,7 @@ public class Interfaz {
      *   @Funcion: Este metodo le muestra el mensaje al usuario
      *   @Param: String que contiene el mensaje que se desea mostrar
      */
-    public void displayMessage(String mensaje){
+    public void showMessage(String mensaje){
         JOptionPane.showMessageDialog(null, mensaje);
     }
 
