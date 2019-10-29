@@ -1,5 +1,5 @@
 import javax.swing.*;
-public class Demo
+public class NiLoVamosAUsar
 {
 
    public static void main(String argv[]){
