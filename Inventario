@@ -1,0 +1,15 @@
+/*
+ * Esta clase debe de ser capaz de guardar (set) y devolver(get) las caracteristicas de las 
+ *  figuras analizadas: Numero de figura, numero de manchas, area, escala, campo del Catalogo
+ *   donde esta guardada tal figura. 
+ */
+public class Inventario {
+    
+    
+    /*
+     *  Devuelve toda la informacion contenida en el inventario.
+     */
+    public String toString(){
+        return "";
+    }
+}
