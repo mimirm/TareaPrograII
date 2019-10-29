@@ -1,9 +1,9 @@
 import javax.swing.JOptionPane;
 public class Interfaz {
-
+    public static final String  ERROR_MESSAGE = "Error! Ingreso no valido.\nIntente de nuevo. ";
      /*
      *   @Funcion: Este metodo le muestra el mensaje al usuario
-     *   @Param: String mensaje que contiene el mensaje que se desea mostrar
+     *   @Param: String que contiene el mensaje que se desea mostrar
      */
     public void displayMessage(String mensaje){
         JOptionPane.showMessageDialog(null, mensaje);
@@ -11,26 +11,32 @@ public class Interfaz {
 
     /*
      *   @Funcion: Muestra al usuario un mensaje, le pide a este
-     *             que ingrese la informacion deseada.
-     *   @Param: String mensaje que contiene el mensaje que se desea mostrar
-     *   @Return: String entrada que contiene lo que el usurio ingreso ante la pregunta.
+     *             que ingrese el entero deseado.
+     *   @Param: String mensaje que contiene el mensaje de instruccion para el usuario
+     *   @Return: Int numero que contiene el entero valido (entre 0 e infinito positivo)
+     *            que ingreso el usuario.
      */
     public int askInt(String mensaje){
-        int numero = 14;
-        String entrada = JOptionPane.showInputDialog(
-                null,
-                mensaje,
-                JOptionPane.QUESTION_MESSAGE);
-        try{
-           numero = Integer.parseInt(entrada);
-        }
-        catch(Exception e){
-           JOptionPane.showInputDialog(
-                null,
-                "Error!! Entrada invalida, intente de nuevo.",
-                JOptionPane.ERROR_MESSAGE);
-        }
+        int numero = -1;
+        
+        do{
+            String entrada = JOptionPane.showInputDialog(
+                            null,
+                            mensaje,
+                            JOptionPane.QUESTION_MESSAGE);
+        
+            try{
+               numero = Integer.parseInt(entrada);
+               if( numero < 0 ){
+                   numero = -1;
+                   JOptionPane.showMessageDialog( null, ERROR_MESSAGE);
+               }
+            }
+            catch(Exception e){
+               JOptionPane.showMessageDialog( null, ERROR_MESSAGE);
+            }
+        }while (numero == -1);
+        
         return numero;
     }
-
 }
