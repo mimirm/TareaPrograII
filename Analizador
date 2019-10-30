@@ -1,61 +1,50 @@
-public class Brain{
-    public static final String MENU = "1.Ver inventario completo.\n2.Ver imagen segun su numero de figura.\n3.Ver imagenes con cantidad de manchas en un rango.\n4.Ver imagenes con escala en un rango.\n5.Ver imagenes que tienen dimensiones en un rango.\n6.Ver imagenes de area en un rango.\n7.Salir.";
-    public Interfaz interfaz;
-    private Inventario inventario;
-    private Catalogo catalogo;
-    private Analizador analizador;
+/*
+ * Esta es la clase crack que va a analizar la imagen y hacer todas las varas cool
+ */
+
+public class Analizador{
+    public static final String [] MENU_CATALOGO = {"1. Mostrar Inventario \n2. Mostrar una imagen por numero de figura \n3. Mostrar imagenes que tienen una cantidad de manchas en un rango especifico \n4. Mostrar imagenes que tienen una escala en un rango especifico \n5. Mostrar las imagenes que tienen una dimension original en un rango especifico \n6. Mostrar las imagenes que tienen un area en un rango especifico \n7. Salir"};
+    public static final int VACIO = -1;
+    public static final int FONDO_IMAGEN = 0;
+    public static final int BORDE = 1;
+    public static final int FONDO_FIGURA = 2;
+    public static final int MANCHA = 3;
+    private int[][]imagenOriginal;
+    private int [][]control;
+    private Inundador inundador;
     
-    public Brain ( int[][] imagen){
-        interfaz = new Interfaz();
-        analizador = new Analizador(imagen);
+    //Recibe la matriz a analizar para inicializarla
+    public Analizador(int[][] imagen){
+        //Inicializa matriz control con misma dimensiones y la llena de vacio.
+        control = new int [imagen.length][imagen[0].length];
+        for(int f = 0; f < control.length; ++f){
+            for(int c = 0; c < control[0].length; ++c){
+                control[f][c] = VACIO;
+            }
+         }
+        llenarControl(control); 
     }
     
-    public void run(){
-        int opcion = 0 ;
-        do{    
-            opcion = pedirOpcion();
-            ejecutarOpcion(opcion);
-        }
-        while (opcion != 7);
+    public void llenarControl( int[][]control ){
+        
     }
     
-    //Pide entero y se asegura que sea [ 1, 7]
-    public int pedirOpcion (){
-        int opcion = -1;
-        while(opcion < 1 && opcion > 7){
-            opcion = interfaz.askInt(MENU);
-        }
-        return opcion;
+    //No se porque se llaman asi o si deberian existir siquiera
+    public void contarFiguras(){
     }
-    
-    public void ejecutarOpcion(int opcion){
-        switch(opcion){
-            case 1:
-                //Mostrar el inventario completo
-            break;
-            case 2:
-                //Mostrar una imagen por numero de figura
-            break;
-            case 3:
-                // Mostrar las imagenes que tienen una cantidad de manchas en un rango
-            break;
-            case 4:
-                // Mostrar las umagenes que tienen una escala en un rango especifico
-            break;
-            case 5:
-                //Mostrar las imagenes que tienen una dimension original en un rango especifico
-            break;
-            case 6:
-                // Mostrar las imagenes que tienen un area en un rango especifico.
-            break;
-            case 7:
-                // Cierre de la aplicacion
-                salir();
-            break;
-        }
+    public void contarManchas(){
     }
-    
-    public void salir(){
-        interfaz.showMessage("Gracias por la visita!");
+
+    //Metodos llenarInventario y llenarCatalogo reciben los objetos respectivos creados
+    // en el Brain para llenarlos con la info correspondiente
+    public void llenarInventario( Inventario inventario ){
+    }
+    public void llenarCatalogo ( Catalogo catalogo ){
+    }
+
+    //Este metodo deberia devolver cuantas figuras hay.
+    //Seria optimo que solamente vea la imagen y vaya contando.
+    public int getCantFiguras(){
+        return 1;
     }
 }
