@@ -1,19 +1,8 @@
 public class Inundador{
     public static final int [] SUMA_F = { -1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
-    public static final int VACIO = -1;
-    public static final int FONDO_IMAGEN = 0;
-    public static final int BORDE = 1;
-    public static final int FONDO_FIGURA = 2;
-    public static final int MANCHA = 3;
 
     public static final int [][] imagen = {{2,2,2,2,2},{2,2,3,3,2},{2,3,5,3,2},{2,2,3,3,2},{2,2,3,2,2},{2,2,2,2,2},{2,7,7,7,2},{2,2,7,7,2},{2,2,7,2,2},{2,2,2,2,2}};
-    
-    public Inundador(){
-        int [][] control = iniciarControl(imagen);
-        System.out.println (toString(imagen));
-        System.out.print(toString(control));
-    }
     
     //Para que no se salga de la matriz
     public boolean direccionValida(int f, int c, int d, int[][] matriz){
@@ -24,46 +13,43 @@ public class Inundador{
     }
     //Para ver si ya le preguntaron 
     public boolean inundado(int f, int c, int[][] control){
-        return posicionValida( f, c, control) && (control[f][c] != VACIO);
+        return posicionValida( f, c, control) && (control[f][c] != Analizador.VACIO);
     }
     
-    public void inundar(int f, int c, int[][] imagen, int[][] control, int colorI, int colorF){
-        if( posicionValida( f, c, imagen ) && !inundado( f, c, control ) && (imagen[f][c] == colorI) ){
-            control[f][c] = colorF;
-            for(int d = 0; d < 8; ++d){
-                if( direccionValida( f, c, d, imagen ) ){
-                    System.out.println("De la casilla ( "+f+ ", "+ c+") Hacia" + d);
-                    inundar(f+SUMA_F[d], c+SUMA_C[d], imagen, control, colorI, colorF);
+    //Metodo recursivo que inunda segun los colores que se quieren
+    private void inundarR(int f, int c, int[][] imagen, int[][] control, int colorI, int colorF){
+        switch(colorF){
+            case Analizador.FONDO_IMAGEN:
+                if( posicionValida( f, c, imagen ) && !inundado( f, c, control ) && (imagen[f][c] == colorI) ){
+                    control[f][c] = Analizador.FONDO_IMAGEN;
+                    for(int d = 0; d < 8; d+=2){
+                        if( direccionValida( f, c, d, imagen ) ){
+                            inundarR(f+SUMA_F[d], c+SUMA_C[d], imagen, control, colorI, colorF);
+                        }
+                    }
                 }
-            }
-        }
-    }
-    
-    public void inundar (int[][]imagen, int[][] control ){
-        inundar(0,0, imagen, control, imagen[0][0], FONDO_IMAGEN);
-    }
-
-    public int encontrarBorde(int[][] control){
-        int colorFondo = -1;
-        for(int f = 0; f < control.length && (colorFondo ==-1); ++f){
-            for(int c = 0; c < control[0].length && (colorFondo ==-1); ++c){
-                if( control[f][c] != VACIO){
-                    colorFondo = control[f][c];
+            break;
+            case Analizador.BORDE:
+                if( posicionValida( f, c, imagen ) && !inundado( f, c, control ) && (imagen[f][c] == colorI) ){
+                    control[f][c] = Analizador.BORDE;
+                    for(int d = 0; d < 8; ++d){
+                        if( direccionValida( f, c, d, imagen ) ){
+                            inundarR(f+SUMA_F[d], c+SUMA_C[d], imagen, control, colorI, colorF);
+                        }
+                    }
                 }
-            }
+            break;
+            
+            case Analizador.FONDO_FIGURA:
+            case Analizador.MANCHA:
         }
-        return colorFondo;
+       
     }
     
-    
-    public int[][] iniciarControl( int[][]imagen){
-        int[][] controlVacio = new int [imagen.length][imagen[0].length];
-        for(int f = 0; f < controlVacio.length; ++f){
-            for(int c = 0; c < controlVacio[0].length; ++c){
-                controlVacio[f][c] = VACIO;
-            }
-        }
-        return controlVacio;
+    //Metodo que importa
+    //Es de donde se inicia la vara recursiva
+    public void inundar (int[][]imagen, int[][] control, int aBuscar,int aCambiar){
+        inundarR(0,0, imagen, control, aBuscar, aCambiar);
     }
     
     public String toString(int[][] matriz){
