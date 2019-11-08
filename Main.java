@@ -4,8 +4,7 @@
 
 public class Main{
     public static void main(String [] args ){
-        Imagen imagen = new Imagen(args[0]);
-        Brain brain = new Brain(imagen.getMatriz());
+        Brain brain = new Brain(args[0]);
         brain.run();
         System.exit(0);
     }
