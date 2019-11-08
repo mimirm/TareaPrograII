@@ -1,8 +1,8 @@
-public class Datos
+public class BuscaDatos
 {private int largo, ancho, area, areapixel,manchas;
     private Imagen imagen;
     private int [][] m;
-    public Datos()
+    public BuscaDatos()
     {
         largo = 0;
         ancho = 0;
