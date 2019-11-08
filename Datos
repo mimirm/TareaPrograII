@@ -1,9 +1,10 @@
-public class BuscaDatos
-{private int largo, ancho, area, areapixel,manchas;
+public class BuscaDatos{
+    private int largo, ancho, area, areapixel, manchas;
     private Imagen imagen;
     private int [][] m;
-    public BuscaDatos()
-    {
+    private int colorFondo;
+    public BuscaDatos( int colorFondo){
+        this.colorFondo = colorFondo;
         largo = 0;
         ancho = 0;
         area = 0;
@@ -13,56 +14,61 @@ public class BuscaDatos
 
     public void buscarAlto(int [][] m){
         boolean seguir = true;
-        for (int o = 0; o < m.length && seguir ; ++o){
-            for(int c = 0; c < m[o].length && seguir ; ++c){ 
-                if (m[o][c] == 2 ){
-                    System.out.println(o + " "+ busquedaAscendente(m) );    
-                    largo = busquedaAscendente(m) - o;
+        for (int f = 0; f < m.length && seguir ; ++f){
+            for(int c = 0; c < m[f].length && seguir ; ++c){ 
+                if ( m[f][c] != colorFondo ){
+                    System.out.println(f + " "+ busquedaAscendente(m) );    
+                    largo = busquedaAscendente(m) - f;
                     seguir = false;
                 }
-
             } 
         }
-
     }
+
     public int busquedaAscendente(int [][] m){
         int borde = 0;
         boolean seguir = true;
-        for (int o = m.length -1 ; o > 0 && seguir; --o){
-            for(int c = m[o].length -1 ; c > 0 && seguir; --c){ 
-                if (m[o][c] == 2 ){
-                    borde = o;
+        for (int f = m.length -1 ; f > 0 && seguir; --f){
+            for(int c = m[f].length -1 ; c > 0 && seguir; --c){ 
+                if (m[f][c] != colorFondo ){
+                    borde = f;
                     seguir = false;
                 }
-
             } 
         }
         return borde;
-
     }
 
     public void buscarAncho(int [][] m){
         boolean seguir = true;
         int izq = m[0].length;
         int der = 0;
-        for (int o = 0; o < m.length && seguir ; ++o){
-            for(int c = 0; c < m[o].length && seguir ; ++c){ 
-                if (m[o][c] == 2 && c < izq ){
+        for (int f = 0; f < m.length && seguir ; ++f){
+            for(int c = 0; c < m[f].length && seguir ; ++c){ 
+                if ( m[f][c] != colorFondo && c < izq ){
                     izq = c;
                 }
-                if (m[o][c] == 2 && c > der ){
+                if (m[f][c] != colorFondo && c > der ){
                     der = c;
                 }
-
             } 
         }
         System.out.println(izq + " "+ der );    
         ancho = der - izq;
-
     }
 
+    public void medirArea(){
+        area = 0;
+        for (int contador = 0; contador < copiacontrol.length; ++contador){
+            for(int contador2 = 0; contador2 < copiacontrol[contador].length; contador2++){
+                if(copiacontrol [contador][contador2] != 1 ){
+                    ++ area;
 
+                }
 
+            }
+        } 
+    }
 
     public int getLargo(){
         return largo;
@@ -73,20 +79,5 @@ public class BuscaDatos
         return ancho;
 
     }
-    public void medirArea(){
-        area = 0;
-    for (int contador = 0; contador < copiacontrol.length; ++contador){
-            for(int contador2 = 0; contador2 < copiacontrol[contador].length; contador2++){
-               if(copiacontrol [contador][contador2] != 1 ){
-                ++ area;
-                
-                }
-               
-
-            }
-        } 
-    
-    }
-    
 
 }
