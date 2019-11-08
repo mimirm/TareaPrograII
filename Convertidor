@@ -1,0 +1,142 @@
+import javax.swing.*;
+public class Convertidor
+{
+    private int [][] m;
+    private int [][] lienzo;
+    private String entrada;
+    private Imagen i;
+    public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
+    public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
+    private int fondo, figuras, cont;
+    public Convertidor(String args)
+    {
+        entrada = "pruebota.gif";
+        i = new Imagen(entrada);
+        i.dibujar();
+        m= i.getMatriz();
+        fondo = m[0][0];
+        lienzo = new int [m.length] [m[0].length];
+        for (int contador = 0; contador < lienzo.length; ++contador){
+            for(int contador2 = 0; contador2 < lienzo[contador].length; contador2++){
+                lienzo[contador][contador2] = 0;
+            }
+        } 
+        figuras = 0;
+        cont= 0;
+    }
+
+    public boolean esValida(int f,int c){
+        return m!=null && f >=0 && f < m.length && m[f]!=null && c >=0 && c < m[f].length;
+
+    }
+
+    public void recorrerImagen()
+    {
+        boolean buscar = true;
+        int borde;
+        for (int o = 0; o < m.length ; ++o){
+            for(int c = 0; c < m[o].length ; ++c){ 
+                if (m[o][c] == fondo && buscar){
+                    detectarFondo(o,c);
+                    buscar = false;
+                }
+                if (lienzo[o][c] == 0){
+                    if ( buscarAlrededor(o,c,1,lienzo) ){
+                        lienzo[o][c] = 2;
+                        borde = m[o][c];
+                        buscarVecinos(o,c,borde, 2);
+                          ++figuras;
+                    }
+                        else{
+                            if(buscarAlrededor(o,c,2,lienzo)){
+                            lienzo[o][c] = 3;
+                            borde = m[o][c];
+                            buscarVecinos(o,c,borde,3);
+
+                        }
+                        
+                        
+                    }
+                  
+                }
+
+            } 
+        }
+
+    }
+
+    private void buscarManchas (int f, int c, int fondo){
+
+        for (int o = 0; o < 8 ; ++o){
+            if(esValida(f + SUMA_F[o],c + SUMA_C[o]) && m[f + SUMA_F[o]][c + SUMA_C[o]] != fondo && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0 ){
+                lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = 3; 
+                buscarManchas(f + SUMA_F[o], c + SUMA_C[o],fondo);
+
+            }
+
+        }
+    }    
+
+
+    private void detectarFondo(int f, int c){
+
+        for (int o = 0; o < 8 ; o += 2){
+            if (esValida(f + SUMA_F[o],c + SUMA_C[o]) && m[f + SUMA_F[o]][c + SUMA_C[o]] == m[f][c] && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0    ){
+                lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = 1;
+                detectarFondo(f + SUMA_F[o], c + SUMA_C[o]);
+            }
+
+        }
+
+    }
+
+    private void buscarVecinos (int f, int c, int borde, int color){
+
+        for (int o = 0; o < 8 ; ++o){
+            if(m[f + SUMA_F[o]][c + SUMA_C[o]] == borde && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0 ){
+                lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = color;
+                buscarVecinos(f + SUMA_F[o], c + SUMA_C[o],borde,color);
+            }
+        }
+    }    
+
+    public boolean buscarAlrededor (int f, int c, int buscado,  int[][] ma){
+        boolean hay = false;
+        for (int o = 0; o < 8 ; o+=2){
+            if(ma[f + SUMA_F[o]][c + SUMA_C[o]] == buscado ){
+                hay = true;
+            }
+
+        }
+        return hay;
+    }
+
+    public void toString(int[][] matriz){
+        for(int f = 0; f < matriz.length; f++){
+            for(int c = 0; c < matriz[f].length; c++){
+                System.out.print(" "+matriz[f][c]); 
+            } 
+            System.out.println("");
+        }
+    }
+
+    public int getFiguras(){
+        return figuras;
+    }
+
+    public int [][] getMatriz (){
+        return lienzo;
+    }
+    public int [][] getOriginal (){
+        return m;
+    }
+
+    public void run(){
+        recorrerImagen();
+        System.out.println(figuras);
+        toString(lienzo);
+        //prueba = new Imagen(lienzo);
+        //prueba.dibujar();
+
+    }
+}
