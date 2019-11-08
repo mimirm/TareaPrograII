@@ -1,0 +1,78 @@
+public class Datos
+{private int largo, ancho, area, areapixel,manchas;
+    private Imagen imagen;
+    private int [][] m;
+    public Datos()
+    {
+        largo = 0;
+        ancho = 0;
+        area = 0;
+        areapixel = 0;
+        manchas = 0;
+    }
+
+    public void buscarAlto(int [][] m){
+        boolean seguir = true;
+        for (int o = 0; o < m.length && seguir ; ++o){
+            for(int c = 0; c < m[o].length && seguir ; ++c){ 
+                if (m[o][c] == 2 ){
+                    System.out.println(o + " "+ busquedaAscendente(m) );    
+                    largo = busquedaAscendente(m) - o;
+                    seguir = false;
+                }
+
+            } 
+        }
+
+    }
+    public int busquedaAscendente(int [][] m){
+        int borde = 0;
+        boolean seguir = true;
+        for (int o = m.length -1 ; o > 0 && seguir; --o){
+            for(int c = m[o].length -1 ; c > 0 && seguir; --c){ 
+                if (m[o][c] == 2 ){
+                    borde = o;
+                    seguir = false;
+                }
+
+            } 
+        }
+        return borde;
+
+    }
+
+    public void buscarAncho(int [][] m){
+        boolean seguir = true;
+        int izq = m[0].length;
+        int der = 0;
+        for (int o = 0; o < m.length && seguir ; ++o){
+            for(int c = 0; c < m[o].length && seguir ; ++c){ 
+                if (m[o][c] == 2 && c < izq ){
+                    izq = c;
+                }
+                if (m[o][c] == 2 && c > der ){
+                    der = c;
+                }
+
+            } 
+        }
+        System.out.println(izq + " "+ der );    
+        ancho = der - izq;
+
+    }
+
+
+
+
+    public int getLargo(){
+        return largo;
+
+    }
+
+    public int getAncho(){
+        return ancho;
+
+    }
+    
+
+}
