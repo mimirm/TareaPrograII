@@ -3,21 +3,26 @@
  *  figuras analizadas: Numero de figura, numero de manchas, area, escala, campo del Catalogo
  *   donde esta guardada tal figura. 
  */
-public class Inventario {
 import java.io.PrintWriter;
 public class Inventario{
-    //COLUMNAS DEL INVENTARIO {numero de imagen(0), area(1), manchas(2), zoom(3), ancho(4), altura(5)}
+    //COLUMNAS DEL INVENTARIO {z}
     private int inventario [][];
+    private int posicionSiguiente;
     private Imagen [] catalogo;
     private PrintWriter archivo;
     public Inventario(int n){
-        archivo = new PrintWriter ("Inventario.txt"); //no se si esto se quedara abierto desde que se llama al contructor.
-        inventario = new int [n][6];
+        try{
+            archivo = new PrintWriter ("Inventario.txt"); //no se si esto se quedara abierto desde que se llama al contructor.
+        }catch(Exception e){
+            System.err.println("Error al crear archivo con la informacion");  
+        }
+            inventario = new int [n][7];
         catalogo = new Imagen[n];
         int o = 1;
+        posicionSiguiente = 0;
         for(int i=0; i<inventario[0].length; ++i){
-            inventario[i][0] = ++o;
-            catalogo[i] = new Imagen();
+            inventario[i][0] = o++;
+            catalogo[i] = null;
         }
     }
     
@@ -31,61 +36,75 @@ public class Inventario{
     }
     
     //mete cualquier vara xd
-    public void setAlgo(int imagen, int caracteristica, int fila, int algo){
-        if(posicionValida(fila) && inventario[fila][0]== --imagen){
-            inventario[fila][caracteristica]=algo;
+    public void setAlgo( int caracteristica, int dato){
+        if(posicionValida(posicionSiguiente--) ){
+            inventario[posicionSiguiente--][caracteristica] = dato;
         }
     }
     
     //comprueba que no haya una imagen en la posicion y la mete
-    public void meterImagen(int imagen[][], int posicion){
-        if(catalogo[posicion]!=null && posicionValida(posicion)){
-            catalogo[posicion] = imagen;
+    public void meterImagen(int [][]imagen){
+        if(catalogo[posicionSiguiente]!=null && posicionValida(posicionSiguiente)){
+            catalogo[posicionSiguiente] = new Imagen(imagen);
+        }
+        posicionSiguiente ++;
+    }
+    
+    public String toString(){
+        String tira = "\tInventario.\nNumero de figura\tManchas\tZoom\tArea\tAncho\tAltura\tPosicion en Catalogo";
+        for(int f= 0; f<inventario.length; ++f){
+            for( int c=0; c < inventario[f].length; ++c){
+                tira+= inventario[f][c] + "\t";
+            }
+        }
+        return tira;
+    }
+    
+        
+    public void ordenarInventario(){
+        //primero se ordena por manchas
+        //si hay igual cantidad de manchas se ordena por zoom
+        int elMasMayor = 0;
+        for(int f = 0; f< inventario.length; ++f){
+            elMasMayor = encontrarMayor(f,1);
+            if(inventario[f][1] != inventario[elMasMayor][1]){
+                for(int i=1; i<inventario.length; ++i){    
+                    swap(inventario[f][i],inventario[elMasMayor][i]);
+                }
+            }
+        }
+        int siguiente = 0;
+        for(int f = 0; f<inventario.length; ++f){
+            siguiente = ++f;
+            if(inventario[f][1]==inventario[siguiente][1]){
+                if(inventario[f][2] < inventario[siguiente][2]){
+                    for(int i=1; i<inventario.length; ++i){    
+                        swap(inventario[f][i],inventario[siguiente][i]);
+                    }
+                }else{
+                    for(int i=1; i<inventario.length; ++i){    
+                        swap(inventario[siguiente][i],inventario[f][i]);
+                    }
+                }
+            }
         }
     }
     
+    public int encontrarMayor(int fila, int columna){
+        int posicion = fila;
+        int siguiente = 0;
+        for(int f = fila; f < inventario.length; ++f){
+            if(inventario[posicion][columna] < inventario[f][columna]){
+                posicion = f;
+            }
+        }
+        return posicion;
+    }
+   
     public void swap(int i, int j){
         int temp = j;
         j=i;
         i=temp;
     }
-    
-    //ordena las imagenes de manera recursiva utilizando la info del inventario
-    public void ordenarManchas(){
-        int elMasMenor = 0;
-        for(int i=0; i<catalogo.length; ++i){
-            elMasMenor = posMenorManchas(i, catalogo.length-1);
-            swap(catalogo[i], catalogo[elMasMenor]);
-        }
-    }
-    
-    public int posMenorManchas(int inicio, int fin){
-        int menor = -1;
-        if(posicionValida(inicio) && posicionValida(fin)){
-            if(inicio==fin){
-                menor = fin;
-            }
-            else{
-                menor = posMenorManchas(inicio+1, fin);
-                if(inventario[inicio][2]<inventario[menor][2]){
-                    menor = inicio;
-                }
-            }
-        }
-        return menor;
-    }
-    
-    public String getCatalogo(){ //no se si esto se vera como la amtriz de numeros o los dibujitos xd
-        String tira = "";
-        int o=1;
-        for(int i=0; i<catalogo.length; ++i){
-            tira+="\t"+catalogo[i].dibujar();
-        }
-        return tira;
-    }
 
-
-    public String toString(){
-        return "";
-    }
 }
