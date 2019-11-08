@@ -3,11 +3,11 @@ public class Brain{
     public Interfaz interfaz;
     private Inventario inventario;
     private Catalogo catalogo;
-    private Analizador analizador;
+    private Separador separador;
     
-    public Brain ( int[][] imagen){
+    public Brain ( String nombreImagen ){
         interfaz = new Interfaz();
-        analizador = new Analizador(imagen);
+        separador = new Separador(nombreImagen);
     }
     
     public void run(){
