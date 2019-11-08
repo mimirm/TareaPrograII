@@ -8,7 +8,7 @@ public class Inventario{
     //COLUMNAS DEL INVENTARIO {z}
     private int inventario [][];
     private int posicionSiguiente;
-    private Imagen [] catalogo;
+    private Imagen [][] catalogo;
     private PrintWriter archivo;
     public Inventario(int n){
         try{
@@ -16,8 +16,8 @@ public class Inventario{
         }catch(Exception e){
             System.err.println("Error al crear archivo con la informacion");  
         }
-            inventario = new int [n][7];
-        catalogo = new Imagen[n];
+        inventario = new int [n][7];
+        catalogo = new Imagen[n][2];
         int o = 1;
         posicionSiguiente = 0;
         for(int i=0; i<inventario[0].length; ++i){
