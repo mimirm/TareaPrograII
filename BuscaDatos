@@ -5,19 +5,18 @@ public class BuscaDatos{
     private int [][] m;
     private int colorFondo;
     private Inventario inventario;
-    public BuscaDatos( int colorFondo, Inventario inventario){
+    public BuscaDatos( Inventario inventario){
         this.inventario = inventario;
-        this.colorFondo = colorFondo;
     }
 
     public void llenarInventario(){
         int n = inventario.getCantFiguras(); 
         for(int i= 0; i< n; ++i){
-            inventario.setAlgo( i, 1, contarManchas(inventario.getMatriz(i, 1)));
+            inventario.setAlgo( i, 1, contarManchas(inventario.getMatrizControl(i)));
             //llenarZoom( i, 2, kfdjhghfdgs);
-            inventario.setAlgo( i, 3, medirArea(inventario.getMatriz(i, 1)));
-            inventario.setAlgo( i, 4, findAncho(inventario.getMatriz(i, 1)));
-            inventario.setAlgo( i, 5,findAltura(inventario.getMatriz(i, 1)));
+            inventario.setAlgo( i, 3, medirArea(inventario.getMatrizControl(i)));
+            inventario.setAlgo( i, 4, findAncho(inventario.getMatrizControl(i)));
+            inventario.setAlgo( i, 5,findAltura(inventario.getMatrizControl(i)));
         }
     }
 
