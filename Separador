@@ -1,4 +1,4 @@
-class Separador{
+public class Separador{
     private Convertidor convertidor;
     private int [][] base;
     private int [][] copia;
@@ -8,8 +8,8 @@ class Separador{
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
     private int area;
     private Inventario inventario;
-    public Separador(){ // ponerle argumento
-        convertidor = new Convertidor();
+    public Separador(String nombreImagen){ // ponerle argumento
+        convertidor = new Convertidor(nombreImagen);
         area = 0;
         base = convertidor.getMatriz();
         copia = new int [base.length][base[0].length];
@@ -21,7 +21,6 @@ class Separador{
                 copiacontrol[contador][contador2] = 1;
             }
         } 
-        inventario = new Inventario(convertidor.getFiguras());
     }
 
     public boolean esValida(int f,int c){
@@ -64,19 +63,22 @@ class Separador{
         for (int contador = 0; contador < x.length; ++contador){
             for(int contador2 = 0; contador2 < x[contador].length; contador2++){
                 x[contador][contador2] = color;
-
             }
         } 
     }
   
     public void run(){
         convertidor.run();
+        inventario = new Inventario(convertidor.getFiguras());
         for(int c = 0; c < convertidor.getFiguras(); ++c){
             separarImagen();
-            inventario.meterImagen(copia,c,0 );
-            inventario.meterImagen(copiacontrol,c,1);
+            inventario.meterImagenPintada(copia,c );
+            inventario.meterImagenControl(copiacontrol,c);
             pintarMatriz(copia,1);
         }
     }
-
+     
+    public Inventario getInventario(){
+        return inventario;
+    }
 }
