@@ -11,13 +11,13 @@ public class BuscaDatos{
     }
 
     public void llenarInventario(){
-        int n = inventario.inventario.length; 
+        int n = inventario.getCantFiguras(); 
         for(int i= 0; i< n; ++i){
-            inventario.setAlgo( 1, contarManchas(inventario.catalogo[i][1].getMatriz()));
-            //llenarZoom(2, kfdjhghfdgs);
-            inventario.setAlgo( 3, medirArea(inventario.catalogo[i][1].getMatriz()));
-            inventario.setAlgo(4, findAncho(inventario.catalogo[i][1].getMatriz()));
-            inventario.setAlgo(5,findAltura(inventario.catalogo[i][1].getMatriz()));
+            inventario.setAlgo( i, 1, contarManchas(inventario.getMatriz(i, 1)));
+            //llenarZoom( i, 2, kfdjhghfdgs);
+            inventario.setAlgo( i, 3, medirArea(inventario.getMatriz(i, 1)));
+            inventario.setAlgo( i, 4, findAncho(inventario.getMatriz(i, 1)));
+            inventario.setAlgo( i, 5,findAltura(inventario.getMatriz(i, 1)));
         }
     }
 
@@ -41,7 +41,7 @@ public class BuscaDatos{
         boolean seguir = true;
         for (int f = m.length -1 ; f > 0 && seguir; --f){
             for(int c = m[f].length -1 ; c > 0 && seguir; --c){ 
-                if (m[f][c] != colorFondo ){
+                if (m[f][c] == 2 ){
                     borde = f;
                     seguir = false;
                 }
@@ -57,10 +57,10 @@ public class BuscaDatos{
         int der = 0;
         for (int f = 0; f < m.length && seguir ; ++f){
             for(int c = 0; c < m[f].length && seguir ; ++c){ 
-                if ( m[f][c] != colorFondo && c < izq ){
+                if ( m[f][c] == 2 && c < izq ){
                     izq = c;
                 }
-                if (m[f][c] != colorFondo && c > der ){
+                if (m[f][c] == 2 && c > der ){
                     der = c;
                 }
             } 
