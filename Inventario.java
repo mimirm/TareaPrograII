@@ -6,9 +6,9 @@
 import java.io.PrintWriter;
 public class Inventario{
     //COLUMNAS DEL INVENTARIO {z}
-    private int inventario [][];
-    private int posicionSiguiente;
-    private Imagen [][] catalogo;
+    public int inventario [][];
+    private int celdaVacia;
+    public Imagen [][] catalogo;
     private PrintWriter archivo;
     public Inventario(int n){
         try{
@@ -16,10 +16,10 @@ public class Inventario{
         }catch(Exception e){
             System.err.println("Error al crear archivo con la informacion");  
         }
-        inventario = new int [n][7];
+            inventario = new int [n][7];
         catalogo = new Imagen[n][2];
         int o = 1;
-        posicionSiguiente = 0;
+        celdaVacia = 0;
         for(int i=0; i<inventario[0].length; ++i){
             inventario[i][0] = o++;
             catalogo[i] = null;
@@ -37,17 +37,17 @@ public class Inventario{
     
     //mete cualquier vara xd
     public void setAlgo( int caracteristica, int dato){
-        if(posicionValida(posicionSiguiente--) ){
-            inventario[posicionSiguiente--][caracteristica] = dato;
+        if(posicionValida(celdaVacia++) ){
+            inventario[celdaVacia++][caracteristica] = dato;
         }
     }
     
     //comprueba que no haya una imagen en la posicion y la mete
-    public void meterImagen(int [][]imagen){
-        if(catalogo[posicionSiguiente]!=null && posicionValida(posicionSiguiente)){
-            catalogo[posicionSiguiente] = new Imagen(imagen);
+    public void meterImagen(int [][]imagen, int f, int c){
+        if(catalogo != null && posicionValida(f)){
+            Imagen i = new Imagen(imagen);
+            catalogo[f][c] = i;
         }
-        posicionSiguiente ++;
     }
     
     public String toString(){
@@ -106,5 +106,8 @@ public class Inventario{
         j=i;
         i=temp;
     }
-
+    
+    public int[][] getMatriz(int f, int c){
+        return catalogo[f][c].getMatriz();
+    }
 }
