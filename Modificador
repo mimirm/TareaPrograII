@@ -1,0 +1,101 @@
+/*
+ * este bro recorta, centra y hace zoom
+ */
+public class Modificador{
+    public static final int [] SUMA_F = { -1,-1, 0, 1, 1, 1, 0,-1 };
+    public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
+    private Inventario inventario;
+    private int anchoMayor, altoMayor;
+    public Modificador (Inventario inventario){
+        this.inventario = inventario;
+    }
+    
+    public void recortarCentrado(){
+        int n = 0;
+        int centroY = 0;
+        int centroX = 0;
+        int altura = 0;
+        int ancho = 0;
+        int [][]destino = new int[findAltoMayor()][findAnchoMayor()];
+        do{
+            for(int f = 0; f< destino.length; ++f){
+                for(int c = 0; c< destino[0].length; ++c){
+                    destino[f][c] = -1;
+                }
+            }
+            //Esto encuentra el centro de la figura desde la matriz sin colorear
+            altura = getAlgo( 5, n);
+            ancho = getAlgo( 4, n);
+            for( int f = 0; f< inventario.getMatriz(n, 1).length; ++f){
+                for(int c = 0; c < inventario.getMatriz(n, 1)[0].length; ++c){
+                    if( inventario.getMatriz(n, 1)[f][c] == 2){
+                        centroX = f + (altura/2);
+                    }
+                }
+            }
+            for( int c = 0; c < inventario.getMatriz(n, 1)[0].length; ++c){
+                for(int f = 0; f < inventario.getMatriz(n, 1).length; ++f){
+                    if(inventario.getMatriz(n, 1)[f][c] == 2){
+                        centroY = f + (ancho/2);
+                    }
+                }
+            }
+            destino = copiarIterativo(centroX, centroY, destino, inventario.getMatriz(n, 0));
+            inventario.meterImagen(destino, n, 0);            
+            n++;
+        }while(n < inventario.getCantFiguras());
+    }
+    
+    public int[][] copiarIterativo (int centroX, int centroY, int[][] destino, int[][]origen){
+        int centroXDestino = destino.length/2;
+        int centroYDestino = destino[0].length/2;
+        int d = 0;
+        int veces = 1;
+        destino[centroXDestino ][centroYDestino] = origen[centroX][centroY];
+        do{ 
+            d = 0;
+            do{
+                destino[centroXDestino +SUMA_F[d]*veces ][centroYDestino + SUMA_C[d]*veces] = origen[centroX + SUMA_F[d]*veces][centroY +SUMA_C[d]*veces];
+                d++;
+            }while (d < 9);
+            veces++;
+        }while(veces <= destino.length/2);
+        return destino;
+    }
+    
+    public int getAlgo(int caracteristica, int figura){
+        int dato = 0;
+        for(int f = 0; f < inventario.getCantFiguras(); ++f){
+            if(inventario.getAlgo(f, 6) == figura){
+                dato =  inventario.getAlgo( f ,caracteristica);
+            }
+        }
+        return dato;
+    }
+    
+    public int findAnchoMayor(){
+        int ancho = 0;
+        for(int f=0; f<inventario.getCantFiguras(); ++f){
+            if(ancho < inventario.getAlgo(f, 4)){
+                ancho = inventario.getAlgo( f , 4);
+            }
+        }
+        if(ancho%2 == 0){
+            ancho ++;
+        }
+        return ancho+2;
+    }
+    public int findAltoMayor(){
+        int alto = 0;
+        for(int f=0; f<inventario.getCantFiguras(); ++f){
+            if(alto < inventario.getAlgo (f , 5)){
+                alto = inventario.getAlgo (f , 5);
+            }
+        }
+        if(alto%2 == 0){
+            alto ++;
+        }
+        return alto+2;
+    }
+    
+}
