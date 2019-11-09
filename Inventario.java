@@ -5,21 +5,20 @@
  */
 import java.io.PrintWriter;
 public class Inventario{
-    //COLUMNAS DEL INVENTARIO {z}
-    public int inventario [][];
-    public Imagen [][] catalogo;
+    private int inventario [][];
+    private Imagen [][] catalogo;
     private PrintWriter archivo;
-    private int cantidadDeImagenes;
+    private int cantFiguras;
     public Inventario(int n){
         try{
             archivo = new PrintWriter ("Inventario.txt"); //no se si esto se quedara abierto desde que se llama al contructor.
         }catch(Exception e){
             System.err.println("Error al crear archivo con la informacion");  
         }
+        cantFiguras = n;
         inventario = new int [n][7];
         catalogo = new Imagen[n][2];
         int o = 1;
-        cantidadDeImagenes = n;
         for(int i=0; i<inventario[0].length; ++i){
             inventario[i][0] = o++;
             catalogo[i] = null;
@@ -33,21 +32,6 @@ public class Inventario{
 
     public boolean posicionValida(int posicion){
         return posicion<inventario.length && posicion<inventario[0].length && posicion>=0;
-    }
-
-    //mete cualquier vara xd
-    public void setAlgo(int fila, int columna, int dato){
-        if(posicionValida(fila) && posicionValida(columna)){
-            inventario[fila][columna] = dato;
-        }
-    }
-
-    public int getAlgo(int fila, int columna){
-        int dato = 0;
-        if(posicionValida(fila) && posicionValida(columna)){
-            dato = inventario[fila][columna];
-        }
-        return dato;
     }
 
     //comprueba que no haya una imagen en la posicion y la mete
@@ -120,7 +104,7 @@ public class Inventario{
 
     public Imagen buscarImagen(int imagen){
         Imagen i= new Imagen(0,0);
-        if(imagen <= cantidadDeImagenes){
+        if(imagen <= cantFiguras){
             for(int fila = 0; fila < inventario.length; ++fila){
                 if(inventario[fila][0] == imagen){
                     i = catalogo[inventario[fila][6]][0];
@@ -154,7 +138,22 @@ public class Inventario{
         return catalogo[f][c].getMatriz();
     }
 
-    public int getImagenes(){
-        return cantidadDeImagenes;
+    public int getCantFiguras(){
+        return cantFiguras;
+    }
+    
+    //mete cualquier vara xd
+    public void setAlgo(int fila, int columna, int dato){
+        if(posicionValida(fila) && posicionValida(columna)){
+            inventario[fila][columna] = dato;
+        }
+    }
+
+    public int getAlgo(int fila, int columna){
+        int dato = 0;
+        if(posicionValida(fila) && posicionValida(columna)){
+            dato = inventario[fila][columna];
+        }
+        return dato;
     }
 }
