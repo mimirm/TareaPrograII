@@ -1,55 +1,67 @@
 /*
  * Esta clase debe de ser capaz de guardar (set) y devolver(get) las caracteristicas de las 
- *  figuras analizadas: Numero de figura, numero de manchas, area, escala, campo del Catalogo
+ *  figuras analizadas: Numero de figura, numero de manchas, escala, area, campo del Catalogo
  *   donde esta guardada tal figura. 
  */
 import java.io.PrintWriter;
 public class Inventario{
     //COLUMNAS DEL INVENTARIO {z}
     public int inventario [][];
-    private int celdaVacia;
     public Imagen [][] catalogo;
     private PrintWriter archivo;
+    private int cantidadDeImagenes;
     public Inventario(int n){
         try{
             archivo = new PrintWriter ("Inventario.txt"); //no se si esto se quedara abierto desde que se llama al contructor.
         }catch(Exception e){
             System.err.println("Error al crear archivo con la informacion");  
         }
-            inventario = new int [n][7];
+        inventario = new int [n][7];
         catalogo = new Imagen[n][2];
         int o = 1;
-        celdaVacia = 0;
+        cantidadDeImagenes = n;
         for(int i=0; i<inventario[0].length; ++i){
             inventario[i][0] = o++;
             catalogo[i] = null;
         }
     }
-    
+
     public void crearArchivo(){
         archivo.print(inventario);
         archivo.close();
     }
-    
+
     public boolean posicionValida(int posicion){
         return posicion<inventario.length && posicion<inventario[0].length && posicion>=0;
     }
-    
+
     //mete cualquier vara xd
-    public void setAlgo( int caracteristica, int dato){
-        if(posicionValida(celdaVacia++) ){
-            inventario[celdaVacia++][caracteristica] = dato;
+    public void setAlgo(int fila, int columna, int dato){
+        if(posicionValida(fila) && posicionValida(columna)){
+            inventario[fila][columna] = dato;
         }
     }
-    
+
+    public int getAlgo(int fila, int columna){
+        int dato = 0;
+        if(posicionValida(fila) && posicionValida(columna)){
+            dato = inventario[fila][columna];
+        }
+        return dato;
+    }
+
     //comprueba que no haya una imagen en la posicion y la mete
     public void meterImagen(int [][]imagen, int f, int c){
-        if(catalogo != null && posicionValida(f)){
+        if(catalogo != null && posicionValida(f) && posicionValida(c)){
             Imagen i = new Imagen(imagen);
             catalogo[f][c] = i;
+            int posicionEnCatalogo = ++f;
+            if(inventario[f][6] != posicionEnCatalogo){
+                inventario[f][6] = posicionEnCatalogo; 
+            }
         }
     }
-    
+
     public String toString(){
         String tira = "\tInventario.\nNumero de figura\tManchas\tZoom\tArea\tAncho\tAltura\tPosicion en Catalogo";
         for(int f= 0; f<inventario.length; ++f){
@@ -59,8 +71,7 @@ public class Inventario{
         }
         return tira;
     }
-    
-        
+
     public void ordenarInventario(){
         //primero se ordena por manchas
         //si hay igual cantidad de manchas se ordena por zoom
@@ -89,7 +100,7 @@ public class Inventario{
             }
         }
     }
-    
+
     public int encontrarMayor(int fila, int columna){
         int posicion = fila;
         int siguiente = 0;
@@ -100,14 +111,50 @@ public class Inventario{
         }
         return posicion;
     }
-   
+
     public void swap(int i, int j){
         int temp = j;
         j=i;
         i=temp;
     }
+
+    public Imagen buscarImagen(int imagen){
+        Imagen i= new Imagen(0,0);
+        if(imagen <= cantidadDeImagenes){
+            for(int fila = 0; fila < inventario.length; ++fila){
+                if(inventario[fila][0] == imagen){
+                    i = catalogo[inventario[fila][6]][0];
+                }
+            }
+        }
+        return i;
+    }
+
+    public void buscarRango(int min, int max, int caracteristica){
+        if(posicionValida(caracteristica)){
+            for(int f=0; f < inventario.length; ++f){
+                if (inventario[f][caracteristica] > min && inventario[f][caracteristica] < max){
+                    catalogo[inventario[f][6]][0].dibujar();
+                } 
+            }
+        }
+    }
     
+    public void buscarDimensiones(int min, int max){
+        int dimension = min*max;
+        for(int fila = 0; fila < inventario.length; ++fila){
+            int dimensionImagen = inventario[fila][4]*inventario[fila][5];
+            if(dimensionImagen<dimension){
+                catalogo[inventario[fila][6]][0].dibujar();
+            }
+        }
+    }
+
     public int[][] getMatriz(int f, int c){
         return catalogo[f][c].getMatriz();
+    }
+
+    public int getImagenes(){
+        return cantidadDeImagenes;
     }
 }
