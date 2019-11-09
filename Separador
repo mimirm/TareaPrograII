@@ -8,9 +8,10 @@ class Separador
     public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
     private int area;
-    public Separador(String args)
+    private Inventario inventario;
+    public Separador() // ponerle argumento
     {
-        convertidor = new Convertidor(args);
+        convertidor = new Convertidor();
         area = 0;
         base = convertidor.getMatriz();
         copia = new int [base.length][base[0].length];
@@ -22,6 +23,7 @@ class Separador
                 copiacontrol[contador][contador2] = 1;
             }
         } 
+        inventario = new Inventario(convertidor.getFiguras());
 
     }
 
@@ -81,19 +83,6 @@ class Separador
 
     }
     
-    public void medirArea(){
-        area = 0;
-    for (int contador = 0; contador < copiacontrol.length; ++contador){
-            for(int contador2 = 0; contador2 < copiacontrol[contador].length; contador2++){
-               if(copiacontrol [contador][contador2] != 1 ){
-                ++ area;
-                
-                }
-
-            }
-        } 
-    
-    }
     
   
 
@@ -101,8 +90,8 @@ class Separador
         convertidor.run();
        for(int c = 0; c < convertidor.getFiguras(); ++c){
         separarImagen();
-        toString(copia);
-
+        inventario.meterImagen(copia,c,0 );
+        inventario.meterImagen(copiacontrol,c,1);
         pintarMatriz(copia,1);
         
         
@@ -114,3 +103,4 @@ class Separador
    
 
 }
+
