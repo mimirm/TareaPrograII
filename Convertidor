@@ -1,6 +1,5 @@
 import javax.swing.*;
-public class Convertidor
-{
+public class Convertidor{
     private int [][] m;
     private int [][] lienzo;
     private String entrada;
@@ -8,8 +7,7 @@ public class Convertidor
     public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
     private int fondo, figuras, cont;
-    public Convertidor() // ponerle argumento
-    {
+    public Convertidor() {// ponerle argumento 
         entrada = "pruebota.gif";
         i = new Imagen(entrada);
         i.dibujar();
@@ -27,11 +25,9 @@ public class Convertidor
 
     public boolean esValida(int f,int c){
         return m!=null && f >=0 && f < m.length && m[f]!=null && c >=0 && c < m[f].length;
-
     }
 
-    public void recorrerImagen()
-    {
+    public void recorrerImagen(){
         boolean buscar = true;
         int borde;
         for (int o = 0; o < m.length ; ++o){
@@ -59,23 +55,18 @@ public class Convertidor
                             borde = m[o][c];
                             buscarVecinos(o,c,borde,4);
                         }
-
                     }
                 }
             } 
         }
-
     }
 
     private void buscarManchas (int f, int c, int fondo){
-
         for (int o = 0; o < 8 ; ++o){
             if(esValida(f + SUMA_F[o],c + SUMA_C[o]) && m[f + SUMA_F[o]][c + SUMA_C[o]] != fondo && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0 ){
                 lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = 3; 
                 buscarManchas(f + SUMA_F[o], c + SUMA_C[o],fondo);
-
             }
-
         }
     }    
 
@@ -85,13 +76,10 @@ public class Convertidor
                 lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = 1;
                 detectarFondo(f + SUMA_F[o], c + SUMA_C[o]);
             }
-
         }
-
     }
 
     private void buscarVecinos (int f, int c, int borde, int color){
-
         for (int o = 0; o < 8 ; ++o){
             if(m[f + SUMA_F[o]][c + SUMA_C[o]] == borde && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0 ){
                 lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = color;
@@ -106,7 +94,6 @@ public class Convertidor
             if(ma[f + SUMA_F[o]][c + SUMA_C[o]] == buscado ){
                 hay = true;
             }
-
         }
         return hay;
     }
@@ -137,6 +124,5 @@ public class Convertidor
         toString(lienzo);
         //prueba = new Imagen(lienzo);
         //prueba.dibujar();
-
     }
 }
