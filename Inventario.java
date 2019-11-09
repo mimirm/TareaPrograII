@@ -1,3 +1,4 @@
+
 /*
  * Esta clase debe de ser capaz de guardar (set) y devolver(get) las caracteristicas de las 
  *  figuras analizadas: Numero de figura, numero de manchas, escala, area, campo del Catalogo
@@ -6,7 +7,8 @@
 import java.io.PrintWriter;
 public class Inventario{
     private int inventario [][];
-    private Imagen [][] catalogo;
+    private Imagen [] catalogoPintado;
+    private Imagen [] catalogoControl;
     private PrintWriter archivo;
     private int cantFiguras;
     public Inventario(int n){
@@ -17,11 +19,13 @@ public class Inventario{
         }
         cantFiguras = n;
         inventario = new int [n][7];
-        catalogo = new Imagen[n][2];
+        catalogoPintado = new Imagen [n];
+        catalogoControl = new Imagen [n];
         int o = 1;
-        for(int i=0; i<inventario[0].length; ++i){
+        for(int i=0; i < inventario.length; ++i){
             inventario[i][0] = o++;
-            catalogo[i] = null;
+            catalogoPintado[i] = null;
+            catalogoControl[i] = null;
         }
     }
 
@@ -35,23 +39,33 @@ public class Inventario{
     }
 
     //comprueba que no haya una imagen en la posicion y la mete
-    public void meterImagen(int [][]imagen, int f, int c){
-        if(catalogo != null && posicionValida(f) && posicionValida(c)){
-            Imagen i = new Imagen(imagen);
-            catalogo[f][c] = i;
-            int posicionEnCatalogo = ++f;
+    public void meterImagenPintada(int [][]imagen, int f){
+        int posicionEnCatalogo = ++f;
+        if(catalogoPintado != null && posicionValida(f)){
+            catalogoPintado[f] = new Imagen(imagen);
             if(inventario[f][6] != posicionEnCatalogo){
                 inventario[f][6] = posicionEnCatalogo; 
             }
         }
     }
-
+     public void meterImagenControl(int [][]imagen, int f){
+        int posicionEnCatalogo = ++f;
+        if(catalogoControl != null && posicionValida(f)){
+            catalogoControl[f] = new Imagen(imagen);
+            if(inventario[f][6] != posicionEnCatalogo){
+                inventario[f][6] = posicionEnCatalogo; 
+            }
+        }
+    }
+    
     public String toString(){
-        String tira = "\tInventario.\nNumero de figura\tManchas\tZoom\tArea\tAncho\tAltura\tPosicion en Catalogo";
+        String tira = "\tInventario.\nNum.figura\tManchas\tZoom\tArea\tAncho\tAltura\tPosicion en Catalogo\n";
         for(int f= 0; f<inventario.length; ++f){
+            tira +="\t";
             for( int c=0; c < inventario[f].length; ++c){
                 tira+= inventario[f][c] + "\t";
             }
+            tira += "\n";
         }
         return tira;
     }
@@ -102,7 +116,8 @@ public class Inventario{
         i=temp;
     }
 
-    public Imagen buscarImagen(int imagen){
+    /*
+     * public Imagen buscarImagen(int imagen){
         Imagen i= new Imagen(0,0);
         if(imagen <= cantFiguras){
             for(int fila = 0; fila < inventario.length; ++fila){
@@ -114,11 +129,13 @@ public class Inventario{
         return i;
     }
 
+     */
+    
     public void buscarRango(int min, int max, int caracteristica){
         if(posicionValida(caracteristica)){
             for(int f=0; f < inventario.length; ++f){
                 if (inventario[f][caracteristica] > min && inventario[f][caracteristica] < max){
-                    catalogo[inventario[f][6]][0].dibujar();
+                    catalogoPintado[inventario[f][6]].dibujar();
                 } 
             }
         }
@@ -129,13 +146,16 @@ public class Inventario{
         for(int fila = 0; fila < inventario.length; ++fila){
             int dimensionImagen = inventario[fila][4]*inventario[fila][5];
             if(dimensionImagen<dimension){
-                catalogo[inventario[fila][6]][0].dibujar();
+                catalogoPintado[inventario[fila][6]].dibujar();
             }
         }
     }
 
-    public int[][] getMatriz(int f, int c){
-        return catalogo[f][c].getMatriz();
+    public int[][] getMatrizControl(int f){
+       return catalogoControl[f].getMatriz();
+    }
+    public int[][] getMatrizPintada(int f){
+       return catalogoPintado[f].getMatriz();
     }
 
     public int getCantFiguras(){
