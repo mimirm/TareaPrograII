@@ -1,0 +1,41 @@
+public class fiunnnnnnnnn{
+    public static final int [] SUMA_F = {-3, 0, 3, 0};
+    public static final int [] SUMA_C = {0, 3, 0,-3 };
+    public static final int [] ZOOM_F = {-1,-1,0};
+    public static final int [] ZOOM_C = {0,1,1};
+    public static final int [][] imagen = {{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1}};
+    // intente que esta matriz entrara pero bluej no la detectaba
+
+    //aqui metes la matriz y el fondo para hacerle zoom a todo lo demas
+    //veo que se jode si la mancha es igual al fondo pero es lo que tengo por ahora
+    public void ZOOOOOOOOOOOOOOOOOOOOM (int [][] matriz, int fondo){
+        for(int fila=0; fila < matriz.length;++fila){
+            for(int columna=0; columna < matriz[fila].length; ++columna){
+                if(hayCampo(fila,columna, matriz) && matriz[fila][columna] != fondo){
+                    hacerZoom(fila,columna, matriz);
+                }
+            }
+        }
+    }
+    
+    //comprueba que hayan al menos 3 pixeles entre el pixel que se le quiere hacer zoom y el ultimo pixel antes del vacio
+    //hago 3 porque se duplican los pixeles 
+    //solo recorre en 4 direcciones dado que esan son las que van a pegar con el vacio al hacer zoom
+    public boolean hayCampo(int f, int c, int [][] matriz){
+        boolean campo = false;
+        for(int i=0; i < 4; ++i){
+            if(matriz[f+SUMA_F[i]][c+SUMA_C[i]] <= matriz[f][c] || matriz[f+SUMA_F[i]][c+SUMA_C[i]] > matriz[f][c]){
+                campo = true;
+            }
+        }
+        return campo;
+    }
+    
+    //esto es lo que segun yo pienso qyue es el zoom
+    //recorre hacia arriba,diagonal derecha y hacia abajo para hacer el zoom
+    public void hacerZoom(int f, int c, int [][] matriz){
+        for(int i=0; i < 3; ++i){
+            matriz[f+ZOOM_F[i]][c+ZOOM_C[i]] = matriz[f][c];
+        }
+    }
+}
