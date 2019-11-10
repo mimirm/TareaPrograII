@@ -1,9 +1,6 @@
 public class BuscaDatos{
     public static final int [] SUMA_F = { -1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
-    private Imagen imagen;
-    private int [][] m;
-    private int colorFondo;
     private Inventario inventario;
     public BuscaDatos( Inventario inventario){
         this.inventario = inventario;
@@ -17,21 +14,25 @@ public class BuscaDatos{
             inventario.setAlgo( i, 3, medirArea(inventario.getMatrizControl(i)));
             inventario.setAlgo( i, 4, findAncho(inventario.getMatrizControl(i)));
             inventario.setAlgo( i, 5,findAltura(inventario.getMatrizControl(i)));
+            System.out.print("Se lleno bien");
         }
     }
 
     public int findAltura(int [][] m){
         int altura = 0;
-        boolean seguir = true;
-        for (int f = 0; f < m.length && seguir ; ++f){
-            for(int c = 0; c < m[f].length && seguir ; ++c){ 
-                if ( m[f][c] == 2 ){
-                    System.out.println(f + " "+ busquedaAscendente(m) );    
-                    altura = busquedaAscendente(m) - f;
-                    seguir = false;
+        int arriba = 0;
+        int abajo = m.length -1;
+        for (int f = 0; f < m.length; ++f){
+            for(int c = 0; c < m[f].length ; ++c){ 
+                if ( m[f][c] == -3 && f > arriba ){
+                    arriba = f;
+                }
+                if (m[f][c] == -3 && f < abajo ){
+                    abajo = f;
                 }
             } 
-        }
+        }  
+        altura = arriba - abajo +1;
         return altura;
     }
 
@@ -39,8 +40,8 @@ public class BuscaDatos{
         int borde = 0;
         boolean seguir = true;
         for (int f = m.length -1 ; f > 0 && seguir; --f){
-            for(int c = m[f].length -1 ; c > 0 && seguir; --c){ 
-                if (m[f][c] == 2 ){
+            for(int c = 0 ; c > m[0].length && seguir; ++c){ 
+                if (m[f][c] == -3 ){
                     borde = f;
                     seguir = false;
                 }
@@ -51,45 +52,46 @@ public class BuscaDatos{
 
     public int findAncho(int [][] m){
         int ancho = 0;
-        boolean seguir = true;
-        int izq = m[0].length;
-        int der = 0;
-        for (int f = 0; f < m.length && seguir ; ++f){
-            for(int c = 0; c < m[f].length && seguir ; ++c){ 
-                if ( m[f][c] == 2 && c < izq ){
+        int der = m[0].length;
+        int izq = 0;
+        for (int f = 0; f < m.length; ++f){
+            for(int c = 0; c < m[f].length ; ++c){ 
+                if ( m[f][c] == -3 && c > izq ){
                     izq = c;
                 }
-                if (m[f][c] == 2 && c > der ){
+                if (m[f][c] == -3 && c < der ){
                     der = c;
                 }
             } 
         }  
-        ancho = der - izq;
+        ancho = izq - der + 1;
         return ancho;
     }
 
     public int medirArea(int[][] control){
         int area = 0;
         for (int i = 0; i < control.length; ++i){
-            for(int j = 0; j < control[j].length; j++){
-                if(control [i][j] != 1 ){
-                    ++ area;
+            for(int j = 0; j < control[0].length; j++){
+                if(control [i][j] != -2 ){
+                    area++;
                 }
             }
         } 
+        //System.out.println("area de " + area);
         return area;
     }
 
     public boolean direccionValida(int f, int c, int d, int[][] matriz){
         return (matriz != null) && posicionValida(f+SUMA_F[d], c+SUMA_C[d], matriz);
     }
+
     public boolean posicionValida(int f, int c, int[][]matriz){
         return (matriz != null) && (f >= 0) && (f < matriz.length) && (c >= 0) && (c < matriz[f].length);
     }
 
     private void borrarMancha(int f, int c, int[][] control){
-        if( posicionValida( f, c, control ) &&  (control[f][c] == 4) ){
-            control[f][c] = 2;
+        if( posicionValida( f, c, control ) &&  (control[f][c] == -5) ){
+            control[f][c] = -4;
             for(int d = 0; d < 8; ++d){
                 if( direccionValida( f, c, d, control ) ){
                     borrarMancha(f+SUMA_F[d], c+SUMA_C[d], control);
@@ -100,10 +102,10 @@ public class BuscaDatos{
 
     public int contarManchas(int[][] control){
         int manchas = 0;
-        for (int i = 0; i < control.length; ++i){
-            for(int j = 0; j < control[j].length; j++){
-                if(control [i][j] == 4 ){
-                    borrarMancha(i,j, control);
+        for (int f = 0; f < control.length; ++f){
+            for(int c = 0; c < control[0].length; ++c){
+                if(control[f][c] == -5 ){
+                    borrarMancha(f,c, control);
                     manchas ++;
                 }
             }
