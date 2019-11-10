@@ -10,60 +10,53 @@ public class Modificador{
         this.inventario = inventario;
         anchoMayor = findAnchoMayor();
         altoMayor = findAltoMayor();
+        recortarMatrices();
     }
     
-    public void recortarCentrado(){
-        int n = 0;
-        int centroY = 0;
-        int centroX = 0;
-        int altura = 0;
-        int ancho = 0;
-        int [][]destino = new int[findAltoMayor()][findAnchoMayor()];
-        do{
-            for(int f = 0; f< destino.length; ++f){
-                for(int c = 0; c< destino[0].length; ++c){
-                    destino[f][c] = -1;
-                }
-            }
-            //Esto encuentra el centro de la figura desde la matriz sin colorear
-            altura = getAlgo( 5, n);
-            ancho = getAlgo( 4, n);
-            for( int f = 0; f< inventario.getMatrizControl(n).length; ++f){
-                for(int c = 0; c < inventario.getMatrizControl(n)[0].length; ++c){
-                    if( inventario.getMatrizControl(n)[f][c] == 2){
-                        centroX = f + (altura/2);
-                    }
-                }
-            }
-            for( int c = 0; c < inventario.getMatrizControl(n)[0].length; ++c){
-                for(int f = 0; f < inventario.getMatrizControl(n).length; ++f){
-                    if(inventario.getMatrizControl(n)[f][c] == 2){
-                        centroY = f + (ancho/2);
-                    }
-                }
-            }
-            destino = copiarIterativo(centroX, centroY, destino, inventario.getMatrizPintada(n));
-            inventario.meterImagenPintada(destino, n);            
-            n++;
-        }while(n < inventario.getCantFiguras());
+    public void recortarMatrices(){
+        for(int n = 0; n < inventario.getCantFiguras(); ++n){
+            recortar(inventario.getMatrizControl(n), inventario.getMatrizPintada(n), n );
+        }
     }
     
-    public int[][] copiarIterativo (int centroX, int centroY, int[][] destino, int[][]origen){
-        int centroXDestino = destino.length/2;
-        int centroYDestino = destino[0].length/2;
-        int d = 0;
-        int veces = 1;
-        destino[centroXDestino ][centroYDestino] = origen[centroX][centroY];
-        do{ 
-            d = 0;
-            do{
-                destino[centroXDestino +SUMA_F[d]*veces ][centroYDestino + SUMA_C[d]*veces] = origen[centroX + SUMA_F[d]*veces][centroY +SUMA_C[d]*veces];
-                d++;
-            }while (d < 9);
-            veces++;
-        }while(veces <= destino.length/2);
-        return destino;
+    public void recortar( int[][] control, int[][] pintada, int n){
+        int [][] destino = new int [altoMayor][ anchoMayor];
+        for (int f = 0; f < destino.length; ++f){
+            for(int c = 0; c < destino[0].length; ++c){
+               destino[f][c] = 0;
+            }
+        }
+        int inicioY = 0;
+        int inicioX = 0;
+        for (int f = 0; f < control.length && inicioY == 0; ++f){
+            for(int c = 0; c < control[0].length && inicioY ==0; ++c){
+                if( control[f][c] == -3 ){
+                    inicioY = f - 1;
+                }
+            }
+        } 
+        for (int c = 0; c < control[0].length && inicioX == 0; ++c){
+            for(int f = 0; f < control.length && inicioX == 0; ++f){
+               if( control[f][c] == -3 ){
+                    inicioX = c - 1;
+                }
+            }
+        } 
+        for (int f = 0; f < destino.length; ++f){
+            for(int c = 0; c < destino[0].length; ++c){
+               destino[f][c] = pintada [inicioY + f][inicioX + c];
+            }
+        }
+        for(int f = 0; f < destino.length; f++){
+            for(int c = 0; c < destino[f].length; c++){
+                System.out.print(" "+destino[f][c]); 
+            } 
+            System.out.println("");
+        }
+
+        inventario.meterImagenPintada( destino, n);
     }
+    
     
     public int getAlgo(int caracteristica, int figura){
         int dato = 0;
@@ -101,6 +94,5 @@ public class Modificador{
             alto ++;
         }
         return alto+2;
-    }
-    
+    }   
 }
