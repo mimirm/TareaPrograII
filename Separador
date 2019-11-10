@@ -18,7 +18,7 @@ public class Separador{
         for (int f = 0; f < copiaPintada.length; ++f){
             for(int c = 0; c < copiaPintada[0].length; ++c){
                 copiaPintada[f][c] = 1;
-                copiaControl[f][c] = 1;
+                copiaControl[f][c] = -2;
             }
         } 
     }
