@@ -75,6 +75,7 @@ public class Separador{
             inventario.meterImagenPintada(copia,c );
             inventario.meterImagenControl(copiacontrol,c);
             pintarMatriz(copia,1);
+            pintarMatriz(copiacontrol,1);
         }
     }
      
