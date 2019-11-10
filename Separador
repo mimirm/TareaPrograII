@@ -1,8 +1,8 @@
 public class Separador{
     private Convertidor convertidor;
-    private int [][] base;
-    private int [][] copia;
-    private int [][] copiacontrol;
+    private int [][] lienzo;
+    private int [][] copiaPintada;
+    private int [][] copiaControl;
     private int [][] original;
     public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
@@ -11,28 +11,28 @@ public class Separador{
     public Separador(String nombreImagen){ // ponerle argumento
         convertidor = new Convertidor(nombreImagen);
         area = 0;
-        base = convertidor.getMatriz();
-        copia = new int [base.length][base[0].length];
-        copiacontrol = new int [base.length][base[0].length];
+        lienzo = convertidor.getLienzo();
+        copiaPintada = new int [lienzo.length][lienzo[0].length];
+        copiaControl = new int [lienzo.length][lienzo[0].length];
         original = convertidor.getOriginal();
-        for (int contador = 0; contador < copia.length; ++contador){
-            for(int contador2 = 0; contador2 < copia[contador].length; contador2++){
-                copia[contador][contador2] = 1;
-                copiacontrol[contador][contador2] = 1;
+        for (int f = 0; f < copiaPintada.length; ++f){
+            for(int c = 0; c < copiaPintada[0].length; ++c){
+                copiaPintada[f][c] = 1;
+                copiaControl[f][c] = 1;
             }
         } 
     }
 
     public boolean esValida(int f,int c){
-        return base!=null && f >=0 && f < base.length && base[f]!=null && c >=0 && c < base[f].length;
+        return lienzo!=null && f >=0 && f < lienzo.length && lienzo[f]!=null && c >=0 && c < lienzo[f].length;
     }
 
     public void separarImagen(){
         boolean buscar = true;    
-        for (int o = 0; o < base.length && buscar  ; ++o){
-            for(int c = 0; c < base[o].length && buscar ; ++c){ 
-                if (base[o][c] != 1){
-                    buscarVecinos(o,c,1);
+        for (int f = 0; f < lienzo.length && buscar  ; ++f){
+            for(int c = 0; c < lienzo[0].length && buscar ; ++c){ 
+                if (lienzo[f][c] != -2){
+                    buscarVecinos(f,c, -2);
                     buscar = false;
                 }
             } 
@@ -40,14 +40,15 @@ public class Separador{
     }
 
     private void buscarVecinos (int f, int c, int fondo){
-        copia[f][c] = original[f][c];
-        copiacontrol[f][c]= base[f][c];
-        base[f][c] = 1;
-        for (int o = 0; o < 8 ; ++o){
-            if(esValida(f + SUMA_F[o],c + SUMA_C[o]) && base[f + SUMA_F[o]][c + SUMA_C[o]] != fondo && copia[f + SUMA_F[o]][c + SUMA_C[o]] == 1 ){
-                buscarVecinos(f + SUMA_F[o], c + SUMA_C[o],fondo);
+        copiaPintada[f][c] = original[f][c];
+        copiaControl[f][c]= lienzo[f][c];
+        lienzo[f][c] = -2; // Borra lo que ya copio
+        for (int d = 0; d < 8 ; ++d){
+            if(esValida(f + SUMA_F[d], c + SUMA_C[d]) && lienzo[f + SUMA_F[d]][c + SUMA_C[d]] != fondo && copiaPintada[f + SUMA_F[d]][c + SUMA_C[d]] == 1){
+                buscarVecinos(f + SUMA_F[d], c + SUMA_C[d],fondo);
             }
         }
+
     }    
 
     public void toString(int[][] matriz){
@@ -57,6 +58,7 @@ public class Separador{
             } 
             System.out.println("");
         }
+        System.out.println("\nOtra");
     }
 
     public void pintarMatriz(int[][] x , int color){
@@ -72,16 +74,24 @@ public class Separador{
         inventario = new Inventario(convertidor.getFiguras());
         for(int c = 0; c < convertidor.getFiguras(); ++c){
             separarImagen();
-            toString(copia);
-            toString(copiacontrol);
-            inventario.meterImagenPintada(copia,c );
-            inventario.meterImagenControl(copiacontrol,c);
-            pintarMatriz(copia,1);
-            pintarMatriz(copiacontrol,1);
+            toString(copiaPintada);
+            toString(copiaControl);
+            inventario.meterImagenPintada(copiaPintada,c );
+            inventario.meterImagenControl(copiaControl,c);
+            pintarMatriz(copiaPintada,1);
+            vaciarCopiaControl();
         }
     }
 
-    public Inventario getInventario(){
+    public void vaciarCopiaControl(){
+        for (int f = 0; f < copiaControl.length; ++f){
+            for(int c = 0; c < copiaControl[0].length; c++){
+                copiaControl[f][c] = -2;
+            }
+        } 
+    }
+
+public Inventario getInventario(){
         return inventario;
     }
 }
