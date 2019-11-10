@@ -14,7 +14,6 @@ public class BuscaDatos{
             inventario.setAlgo( i, 3, medirArea(inventario.getMatrizControl(i)));
             inventario.setAlgo( i, 4, findAncho(inventario.getMatrizControl(i)));
             inventario.setAlgo( i, 5,findAltura(inventario.getMatrizControl(i)));
-            System.out.print("Se lleno bien");
         }
     }
 
@@ -77,7 +76,6 @@ public class BuscaDatos{
                 }
             }
         } 
-        //System.out.println("area de " + area);
         return area;
     }
 
