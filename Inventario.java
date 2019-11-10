@@ -22,6 +22,11 @@ public class Inventario{
         catalogoPintado = new Imagen [n];
         catalogoControl = new Imagen [n];
         int o = 1;
+        for( int f = 0 ; f < inventario.length; ++f){
+            for(int c = 0; c < inventario[0].length; ++c){
+                inventario[f][c] = 0;
+            }
+        }
         for(int i=0; i < inventario.length; ++i){
             inventario[i][0] = o++;
             catalogoPintado[i] = null;
@@ -43,7 +48,6 @@ public class Inventario{
         int posicionEnCatalogo = f;
         if(catalogoPintado != null && posicionValida(f, 0)){
             catalogoPintado[f] = new Imagen(imagen);
-            //catalogoPintado[f].dibujar();
             inventario[f][6] = posicionEnCatalogo;
         }
     }
@@ -51,7 +55,6 @@ public class Inventario{
         int posicionEnCatalogo = f;
         if(catalogoControl != null && posicionValida(f, 0)){
             catalogoControl[f] = new Imagen(imagen);
-            //catalogoControl[f].dibujar();
             inventario[f][6] = posicionEnCatalogo;
         }
     }
@@ -168,10 +171,13 @@ public class Inventario{
     }
 
     public int getAlgo(int f, int c){
-        int dato = 0;
+        /*
+         * int dato = -1;
         if(posicionValida(f,c)){
-            dato = inventario[f][c];
+            dato = this.inventario[f][c];
         }
-        return dato;
+        System.out.println(dato);
+         */
+        return this.inventario[f][c];
     }
 }
