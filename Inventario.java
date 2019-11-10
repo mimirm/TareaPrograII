@@ -1,4 +1,3 @@
-
 /*
  * Esta clase debe de ser capaz de guardar (set) y devolver(get) las caracteristicas de las 
  *  figuras analizadas: Numero de figura, numero de manchas, escala, area, campo del Catalogo
@@ -11,6 +10,7 @@ public class Inventario{
     private Imagen [] catalogoControl;
     private PrintWriter archivo;
     private int cantFiguras;
+    
     public Inventario(int n){
         try{
             archivo = new PrintWriter ("Inventario.txt"); //no se si esto se quedara abierto desde que se llama al contructor.
@@ -34,27 +34,25 @@ public class Inventario{
         archivo.close();
     }
 
-    public boolean posicionValida(int posicion){
-        return posicion<inventario.length && posicion<inventario[0].length && posicion>=0;
+    public boolean posicionValida(int f, int c){
+        return f >= 0 && f < inventario.length && c >=0 && c < inventario[f].length;
     }
 
     //comprueba que no haya una imagen en la posicion y la mete
     public void meterImagenPintada(int [][]imagen, int f){
-        int posicionEnCatalogo = ++f;
-        if(catalogoPintado != null && posicionValida(f)){
+        int posicionEnCatalogo = f;
+        if(catalogoPintado != null && posicionValida(f, 0)){
             catalogoPintado[f] = new Imagen(imagen);
-            if(inventario[f][6] != posicionEnCatalogo){
-                inventario[f][6] = posicionEnCatalogo; 
-            }
+            //catalogoPintado[f].dibujar();
+            inventario[f][6] = posicionEnCatalogo;
         }
     }
-     public void meterImagenControl(int [][]imagen, int f){
-        int posicionEnCatalogo = ++f;
-        if(catalogoControl != null && posicionValida(f)){
+    public void meterImagenControl(int [][]imagen, int f){
+        int posicionEnCatalogo = f;
+        if(catalogoControl != null && posicionValida(f, 0)){
             catalogoControl[f] = new Imagen(imagen);
-            if(inventario[f][6] != posicionEnCatalogo){
-                inventario[f][6] = posicionEnCatalogo; 
-            }
+            //catalogoControl[f].dibujar();
+            inventario[f][6] = posicionEnCatalogo;
         }
     }
     
@@ -132,7 +130,7 @@ public class Inventario{
      */
     
     public void buscarRango(int min, int max, int caracteristica){
-        if(posicionValida(caracteristica)){
+        if(posicionValida(0 , caracteristica)){
             for(int f=0; f < inventario.length; ++f){
                 if (inventario[f][caracteristica] > min && inventario[f][caracteristica] < max){
                     catalogoPintado[inventario[f][6]].dibujar();
@@ -163,16 +161,16 @@ public class Inventario{
     }
     
     //mete cualquier vara xd
-    public void setAlgo(int fila, int columna, int dato){
-        if(posicionValida(fila) && posicionValida(columna)){
-            inventario[fila][columna] = dato;
+    public void setAlgo(int f, int c, int dato){
+        if(posicionValida(f , c)){
+            inventario[f][c] = dato;
         }
     }
 
-    public int getAlgo(int fila, int columna){
+    public int getAlgo(int f, int c){
         int dato = 0;
-        if(posicionValida(fila) && posicionValida(columna)){
-            dato = inventario[fila][columna];
+        if(posicionValida(f,c)){
+            dato = inventario[f][c];
         }
         return dato;
     }
