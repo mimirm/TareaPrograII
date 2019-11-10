@@ -1,22 +1,27 @@
 import javax.swing.*;
 public class Convertidor{
-    private int [][] m;
+    private int [][] original;
     private int [][] lienzo;
     private String entrada;
     private Imagen i;
     public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
     private int fondo, figuras, cont;
-    public Convertidor() {// ponerle argumento 
-        entrada = "pruebota.gif";
+    public Convertidor(String nombreImagen) {// ponerle argumento 
+        if(nombreImagen == ""){
+            entrada = "miniFacil1.gif";
+        }
+        else{
+            entrada = nombreImagen;
+        }
         i = new Imagen(entrada);
         i.dibujar();
-        m= i.getMatriz();
-        fondo = m[0][0];
-        lienzo = new int [m.length] [m[0].length];
-        for (int contador = 0; contador < lienzo.length; ++contador){
-            for(int contador2 = 0; contador2 < lienzo[contador].length; contador2++){
-                lienzo[contador][contador2] = 0;
+        original = i.getMatriz();
+        fondo = original[0][0];
+        lienzo = new int [original.length] [original[0].length];
+        for (int f = 0; f < lienzo.length; ++f){
+            for(int c = 0; c < lienzo[0].length; ++c){
+                lienzo[f][c] = -1;
             }
         } 
         figuras = 0;
@@ -24,36 +29,36 @@ public class Convertidor{
     }
 
     public boolean esValida(int f,int c){
-        return m!=null && f >=0 && f < m.length && m[f]!=null && c >=0 && c < m[f].length;
+        return original!=null && f >=0 && f < original.length && original[f]!=null && c >=0 && c < original[f].length;
     }
 
     public void recorrerImagen(){
         boolean buscar = true;
         int borde;
-        for (int o = 0; o < m.length ; ++o){
-            for(int c = 0; c < m[o].length ; ++c){ 
-                if (m[o][c] == fondo && buscar){
+        for (int o = 0; o < original.length ; ++o){
+            for(int c = 0; c < original[o].length ; ++c){ 
+                if (original[o][c] == fondo && buscar){
                     detectarFondo(o,c);
                     buscar = false;
                 }
-                if (lienzo[o][c] == 0){
-                    if ( buscarAlrededor(o,c,1,lienzo) ){
-                        lienzo[o][c] = 2;
-                        borde = m[o][c];
-                        buscarVecinos(o,c,borde, 2);
+                if (lienzo[o][c] == -1){
+                    if ( buscarAlrededor(o,c,-2,lienzo) ){
+                        lienzo[o][c] = -3;
+                        borde = original[o][c];
+                        buscarVecinos(o,c,borde, -3);
                         ++figuras;
                     }
                     else{
-                        if(buscarAlrededor(o,c,2,lienzo)){
-                            lienzo[o][c] = 3;
-                            borde = m[o][c];
-                            buscarVecinos(o,c,borde,3);
+                        if(buscarAlrededor(o,c,-3,lienzo)){
+                            lienzo[o][c] = -4;
+                            borde = original[o][c];
+                            buscarVecinos(o,c,borde,-4);
 
                         }
                         else {
-                            lienzo[o][c] = 4;
-                            borde = m[o][c];
-                            buscarVecinos(o,c,borde,4);
+                            lienzo[o][c] = -5;
+                            borde = original[o][c];
+                            buscarVecinos(o,c,borde,-5);
                         }
                     }
                 }
@@ -63,7 +68,7 @@ public class Convertidor{
 
     private void buscarManchas (int f, int c, int fondo){
         for (int o = 0; o < 8 ; ++o){
-            if(esValida(f + SUMA_F[o],c + SUMA_C[o]) && m[f + SUMA_F[o]][c + SUMA_C[o]] != fondo && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0 ){
+            if(esValida(f + SUMA_F[o],c + SUMA_C[o]) && original[f + SUMA_F[o]][c + SUMA_C[o]] != fondo && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == -1 ){
                 lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = 3; 
                 buscarManchas(f + SUMA_F[o], c + SUMA_C[o],fondo);
             }
@@ -72,8 +77,8 @@ public class Convertidor{
 
     private void detectarFondo(int f, int c){
         for (int o = 0; o < 8 ; o += 2){
-            if (esValida(f + SUMA_F[o],c + SUMA_C[o]) && m[f + SUMA_F[o]][c + SUMA_C[o]] == m[f][c] && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0    ){
-                lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = 1;
+            if (esValida(f + SUMA_F[o],c + SUMA_C[o]) && original[f + SUMA_F[o]][c + SUMA_C[o]] == original[f][c] && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == -1){
+                lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = -2;
                 detectarFondo(f + SUMA_F[o], c + SUMA_C[o]);
             }
         }
@@ -81,7 +86,7 @@ public class Convertidor{
 
     private void buscarVecinos (int f, int c, int borde, int color){
         for (int o = 0; o < 8 ; ++o){
-            if(m[f + SUMA_F[o]][c + SUMA_C[o]] == borde && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == 0 ){
+            if(original[f + SUMA_F[o]][c + SUMA_C[o]] == borde && lienzo[f + SUMA_F[o]][c + SUMA_C[o]] == -1 ){
                 lienzo[f + SUMA_F[o]][c + SUMA_C[o]] = color;
                 buscarVecinos(f + SUMA_F[o], c + SUMA_C[o],borde,color);
             }
@@ -111,18 +116,17 @@ public class Convertidor{
         return figuras;
     }
 
-    public int [][] getMatriz (){
+    public int [][] getLienzo (){
         return lienzo;
     }
 
     public int [][] getOriginal (){
-        return m;
+        return original;
     }
 
     public void run(){
         recorrerImagen();
         toString(lienzo);
-        //prueba = new Imagen(lienzo);
-        //prueba.dibujar();
+
     }
 }
