@@ -126,7 +126,5 @@ public class Convertidor{
 
     public void run(){
         recorrerImagen();
-        toString(lienzo);
-
     }
 }
