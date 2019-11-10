@@ -40,11 +40,11 @@ public class Separador{
     }
 
     private void buscarVecinos (int f, int c, int fondo){
+        copia[f][c] = original[f][c];
+        copiacontrol[f][c]= base[f][c];
+        base[f][c] = 1;
         for (int o = 0; o < 8 ; ++o){
             if(esValida(f + SUMA_F[o],c + SUMA_C[o]) && base[f + SUMA_F[o]][c + SUMA_C[o]] != fondo && copia[f + SUMA_F[o]][c + SUMA_C[o]] == 1 ){
-                copia[f + SUMA_F[o]][c + SUMA_C[o]] = original[f + SUMA_F[o]][c + SUMA_C[o]];
-                copiacontrol[f + SUMA_F[o]][c + SUMA_C[o]] = base[f + SUMA_F[o]][c + SUMA_C[o]];
-                base[f + SUMA_F[o]][c + SUMA_C[o]] = 1;
                 buscarVecinos(f + SUMA_F[o], c + SUMA_C[o],fondo);
             }
         }
@@ -66,19 +66,21 @@ public class Separador{
             }
         } 
     }
-  
+
     public void run(){
         convertidor.run();
         inventario = new Inventario(convertidor.getFiguras());
         for(int c = 0; c < convertidor.getFiguras(); ++c){
             separarImagen();
+            toString(copia);
+            toString(copiacontrol);
             inventario.meterImagenPintada(copia,c );
             inventario.meterImagenControl(copiacontrol,c);
             pintarMatriz(copia,1);
             pintarMatriz(copiacontrol,1);
         }
     }
-     
+
     public Inventario getInventario(){
         return inventario;
     }
