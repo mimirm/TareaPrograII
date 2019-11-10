@@ -58,7 +58,6 @@ public class Separador{
             } 
             System.out.println("");
         }
-        System.out.println("\nOtra");
     }
 
     public void pintarMatriz(int[][] x , int color){
@@ -74,8 +73,6 @@ public class Separador{
         inventario = new Inventario(convertidor.getFiguras());
         for(int c = 0; c < convertidor.getFiguras(); ++c){
             separarImagen();
-            toString(copiaPintada);
-            toString(copiaControl);
             inventario.meterImagenPintada(copiaPintada,c );
             inventario.meterImagenControl(copiaControl,c);
             pintarMatriz(copiaPintada,1);
