@@ -8,6 +8,8 @@ public class Modificador{
     private int anchoMayor, altoMayor;
     public Modificador (Inventario inventario){
         this.inventario = inventario;
+        anchoMayor = findAnchoMayor();
+        altoMayor = findAltoMayor();
     }
     
     public void recortarCentrado(){
@@ -26,22 +28,22 @@ public class Modificador{
             //Esto encuentra el centro de la figura desde la matriz sin colorear
             altura = getAlgo( 5, n);
             ancho = getAlgo( 4, n);
-            for( int f = 0; f< inventario.getMatriz(n, 1).length; ++f){
-                for(int c = 0; c < inventario.getMatriz(n, 1)[0].length; ++c){
-                    if( inventario.getMatriz(n, 1)[f][c] == 2){
+            for( int f = 0; f< inventario.getMatrizControl(n).length; ++f){
+                for(int c = 0; c < inventario.getMatrizControl(n)[0].length; ++c){
+                    if( inventario.getMatrizControl(n)[f][c] == 2){
                         centroX = f + (altura/2);
                     }
                 }
             }
-            for( int c = 0; c < inventario.getMatriz(n, 1)[0].length; ++c){
-                for(int f = 0; f < inventario.getMatriz(n, 1).length; ++f){
-                    if(inventario.getMatriz(n, 1)[f][c] == 2){
+            for( int c = 0; c < inventario.getMatrizControl(n)[0].length; ++c){
+                for(int f = 0; f < inventario.getMatrizControl(n).length; ++f){
+                    if(inventario.getMatrizControl(n)[f][c] == 2){
                         centroY = f + (ancho/2);
                     }
                 }
             }
-            destino = copiarIterativo(centroX, centroY, destino, inventario.getMatriz(n, 0));
-            inventario.meterImagen(destino, n, 0);            
+            destino = copiarIterativo(centroX, centroY, destino, inventario.getMatrizPintada(n));
+            inventario.meterImagenPintada(destino, n);            
             n++;
         }while(n < inventario.getCantFiguras());
     }
@@ -74,14 +76,17 @@ public class Modificador{
     }
     
     public int findAnchoMayor(){
-        int ancho = 0;
-        for(int f=0; f<inventario.getCantFiguras(); ++f){
-            if(ancho < inventario.getAlgo(f, 4)){
+        int ancho = inventario.getAlgo(0,4);
+        //inventario.setAlgo(0,4, 55);
+        System.out.println(ancho);
+        for(int f = 0; f < inventario.getCantFiguras(); ++f){
+            if(ancho < inventario.getAlgo( f, 4)){
+                System.out.println("Entra a findAnchoMAyor");
                 ancho = inventario.getAlgo( f , 4);
             }
         }
         if(ancho%2 == 0){
-            ancho ++;
+            ancho += 1;
         }
         return ancho+2;
     }
