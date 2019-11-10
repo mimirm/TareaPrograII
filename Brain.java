@@ -5,10 +5,18 @@ public class Brain{
     public Interfaz interfaz;
     private Inventario inventario;
     private Separador separador;
+    private BuscaDatos buscaDatos;
+    private Modificador modificador;
     
     public Brain ( String nombreImagen ){
         interfaz = new Interfaz();
         separador = new Separador(nombreImagen);
+        separador.run();
+        inventario = separador.getInventario();
+        buscaDatos = new BuscaDatos(inventario);
+        modificador = new Modificador (inventario);
+        buscaDatos.llenarInventario();
+        
     }
     
     public void run(){
@@ -64,4 +72,3 @@ public class Brain{
         interfaz.showMessage("Gracias por la visita!");
     }
 }
-
