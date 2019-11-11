@@ -5,99 +5,94 @@ public class Modificador{
     public static final int [] SUMA_F = { -1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
     private Inventario inventario;
-    private int anchoMayor, altoMayor;
+    private int filasMayor, columnasMayor;
     private Zoom zoomeador;
     private int zoom;
     public Modificador (Inventario inventario){
         this.inventario = inventario;
         zoomeador = new Zoom();
-        anchoMayor = findAnchoMayor();
-        altoMayor = findAltoMayor();
+        filasMayor = findFilasMayor();
+        columnasMayor = findColumnasMayor();
         zoom = 0;
     }
-
-    public void recortarCentrado(){
-        int n = 0;
-        int centroY = 0;
-        int centroX = 0;
-        int altura = 0;
-        int ancho = 0;
-        int [][]destino = new int[findAltoMayor()][findAnchoMayor()];
-        do{
-            for(int f = 0; f< destino.length; ++f){
-                for(int c = 0; c< destino[0].length; ++c){
-                    destino[f][c] = -1;
-                }
-            }
-            //Esto encuentra el centro de la figura desde la matriz sin colorear
-            altura = getAlgo( 5, n);
-            ancho = getAlgo( 4, n);
-            for( int f = 0; f< inventario.getMatrizControl(n).length; ++f){
-                for(int c = 0; c < inventario.getMatrizControl(n)[0].length; ++c){
-                    if( inventario.getMatrizControl(n)[f][c] == 2){
-                        centroX = f + (altura/2);
-                    }
-                }
-            }
-            for( int c = 0; c < inventario.getMatrizControl(n)[0].length; ++c){
-                for(int f = 0; f < inventario.getMatrizControl(n).length; ++f){
-                    if(inventario.getMatrizControl(n)[f][c] == 2){
-                        centroY = f + (ancho/2);
-                    }
-                }
-            }
-            destino = copiarIterativo(centroX, centroY, destino, inventario.getMatrizPintada(n));
-            inventario.meterImagenPintada(hacerZoom(destino), n);            
-            n++;
-        }while(n < inventario.getCantFiguras());
+   public void recortarMatrices(){
+        for(int n = 0; n < inventario.getCantFiguras(); ++n){
+            recortar(inventario.getMatrizControl(n), inventario.getMatrizPintada(n), n );
+        }
     }
-
-    public int[][] copiarIterativo (int centroX, int centroY, int[][] destino, int[][]origen){
-        int centroXDestino = destino.length/2;
-        int centroYDestino = destino[0].length/2;
-        int d = 0;
-        int veces = 1;
-        destino[centroXDestino ][centroYDestino] = origen[centroX][centroY];
-        do{ 
-            d = 0;
-            do{
-                destino[centroXDestino +SUMA_F[d]+veces][centroYDestino + SUMA_C[d]+veces] = origen[centroX + SUMA_F[d]+veces][centroY +SUMA_C[d]+veces];
-                d++;
-            }while (d < 8);
-            veces++;
-        }while(veces <= destino.length/2);
-        System.out.println(destino);
-        return destino;
-    }
-
-    public int getAlgo(int caracteristica, int figura){
-        int dato = 0;
-        for(int f = 0; f < inventario.getCantFiguras(); ++f){
-            if(inventario.getAlgo(f, 6) == figura){
-                dato =  inventario.getAlgo( f ,caracteristica);
+    
+    public void recortar( int[][] control, int[][] pintada, int n){
+        int [][] destino = new int [filasMayor][ columnasMayor];
+        for (int f = 0; f < destino.length; ++f){
+            for(int c = 0; c < destino[0].length; ++c){
+               destino[f][c] = 0;
             }
         }
-        return dato;
+        int filaInicial = 0;
+        int columnaInicial = 0;
+        int filaFinal = 0;
+        int columnaFinal = 0;
+        for (int f = 0; f < control.length && filaInicial == 0; ++f){
+            for(int c = 0; c < control[0].length && filaInicial ==0; ++c){
+                if( control[f][c] == -3 ){
+                    filaInicial = f - 1;
+                }
+            }
+        } 
+        for (int c = 0; c < control[0].length && columnaInicial == 0; ++c){
+            for(int f = 0; f < control.length && columnaInicial == 0; ++f){
+               if( control[f][c] == -3 ){
+                    columnaInicial = c - 1;
+                }
+            }
+        } 
+        for (int f = control.length ; f < 0  && filaFinal == 0; --f){
+            for(int c = 0; c < control[0].length && filaInicial ==0; ++c){
+                if( control[f][c] == -3 ){
+                    filaFinal = f + 1;
+                }
+            }
+        } 
+        for (int c = control[0].length; c < 0 && columnaInicial == 0; --c){
+            for(int f = 0; f < control.length && columnaInicial == 0; ++f){
+               if( control[f][c] == -3 ){
+                    columnaFinal = c + 1;
+                }
+            }
+        } 
+        for (int f = 0; f < destino.length && f < filaFinal; ++f){
+            for(int c = 0; c < destino[0].length && c < columnaFinal ; ++c){
+               destino[f][c] = pintada [filaInicial + f][columnaInicial + c];
+            }
+        }
+        //Para prueba
+        for(int f = 0; f < destino.length; f++){
+            for(int c = 0; c < destino[f].length; c++){
+                System.out.print(" "+destino[f][c]); 
+            } 
+            System.out.println("");
+        }
+
+        inventario.meterImagenPintada( destino, n);
     }
 
-    public int findAnchoMayor(){
+    public int findColumnasMayor(){
         int ancho = inventario.getAlgo(0,4);
-        //inventario.setAlgo(0,4, 55);
         System.out.println(ancho);
         for(int f = 0; f < inventario.getCantFiguras(); ++f){
             if(ancho < inventario.getAlgo( f, 4)){
                 System.out.println("Entra a findAnchoMAyor");
-                ancho = inventario.getAlgo( f , 4);
-                System.out.println(inventario.getAlgo( f , 4));
+                ancho = inventario.getAlgo( f , 4);   //lo que se guarda en la columnas de "columnas"
             }
         }
         if(ancho%2 == 0){
             ancho += 1;
         }
+        System.out.println(ancho+2);
         return ancho+2;
     }
 
-    public int findAltoMayor(){
+    public int findFilasMayor(){
         int alto = 0;
         for(int f=0; f<inventario.getCantFiguras(); ++f){
             if(alto < inventario.getAlgo (f , 5)){
@@ -126,6 +121,6 @@ public class Modificador{
     }
     
     public void run(){
-        recortarCentrado();
+        recortarMatrices();
     }
 }
