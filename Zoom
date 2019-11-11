@@ -25,13 +25,15 @@ public class Zoom{
         fondo = original[0][0];  //en teoria con esto se arregla lo del fondo, el fondo al final va a ser el fondo de la matriz que ingrese
         pintarMatriz(zoomx,fondo); //ya zoomx deberia ser del color del fondo
         buscarFondo(original); //con este metodo se pinta el fodo de zoom de manera recursiva
-        toString(zoom); //un toString de prueba
+        //toString(zoom); //un toString de prueba
         altoyancho(original); //esto es  un metodo que tan alto y que tan a la derecha esta la figura, ayuda para ponerla arriba a la izquierda
         System.out.println(altura +" "+ anchura);  //prueba del metodo altoyancho
         mover(original, altura, anchura); // coloca la figura arriba a la izquierda
-        hacerZoom(zoom); // aplica el zoom como le explique 
-        i = new Imagen(zoomx); //esto es una prueba para ver que se dibuej bien
-        i.dibujar(); 
+       //toString(zoom);
+        hacerZoom(); // aplica el zoom como le explique 
+    
+        //i = new Imagen(zoomx); //esto es una prueba para ver que se dibuej bien
+        //i.dibujar(); 
 
         return zoomx; // devuelve la matriz ya con zoom
     }
@@ -124,47 +126,24 @@ public class Zoom{
             System.out.println("");
         }
     }
+    
+    
 
-    public void hacerZoom(int [][] m){
-        do{
-            for (int o = 0; o < m.length ; ++o){
-                for(int c = 0; c < m[o].length ; ++c){ 
-                    if (m[o][c] != fondo ){
-                        zoomx [o * 2][c * 2] = m[o][c]; 
-                        pintar(o * 2, c * 2, zoomx, m [o][c]);
+    public void hacerZoom(){
+     
+            for (int o = 0; o < zoom.length ; ++o){
+                for(int c = 0; c < zoom[o].length ; ++c){ 
+                    if (zoom[o][c] != fondo ){
+                        zoomx [o * 2][c * 2] = zoom[o][c]; 
+                        pintar(o * 2, c * 2, zoomx, zoom [o][c]);
                         ++cantidadDeZoom;
                     }
                 } 
             }
-        }while(hayCampo(zoomx));
+         
     }
 
-    public boolean hayCampo(int matriz [][]){
-        boolean hay = true;
-        for(int f = matriz.length-1; f >= 0; --f){
-            for(int c = matriz[f].length-1; c >= 0; --c){
-                if(matriz[f][c] != fondo){
-                    int f2 = f+3;
-                    int c2 = c+3;
-                    if(matriz[f2][c2] != fondo){
-                        hay = false;
-                    }
-                }
-            }
-        }
-        for(int c = matriz[0].length-1; c >= 0; --c){
-            for(int f = matriz.length-1; f >= 0; --f){
-                if(matriz[f][c] != fondo){
-                    int f2 = f+3;
-                    int c2 = c+3;
-                    if(matriz[f2][c2] != fondo){
-                        hay = false;
-                    }
-                }
-            }
-        }
-        return hay;
-    }
+    
     
     public void pintar(int f, int c, int [][] m, int color){
         for(int i=0; i < 3; ++i){
