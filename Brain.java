@@ -2,7 +2,7 @@ public class Brain{
     public static final String MENU = "1.Ver inventario completo.\n2.Ver imagen segun su numero de figura.\n3.Ver imagenes con cantidad de manchas en un rango.\n4.Ver imagenes con escala en un rango.\n5.Ver imagenes que tienen dimensiones en un rango.\n6.Ver imagenes de area en un rango.\n7.Salir.";
     public static final String MIN = "Digite el minimo para el rango:";
     public static final String MAX = "Digite el maximo para el rango:";
-    public Interfaz interfaz;
+    private Interfaz interfaz;
     private Inventario inventario;
     private Separador separador;
     private BuscaDatos buscaDatos;
@@ -14,16 +14,16 @@ public class Brain{
         separador.run();
         inventario = separador.getInventario();
         buscaDatos = new BuscaDatos(inventario);
-        modificador = new Modificador (inventario);
         buscaDatos.llenarInventario();
-        
+        modificador = new Modificador (inventario);
+        modificador.run();        
     }
     
     public void run(){
-        int opcion = 0 ;
+        int opcion = 0 ;        
         do{    
             opcion = pedirOpcion();
-            ejecutarOpcion(opcion);
+            ejecutarOpcion(opcion);           
         }
         while (opcion != 7);
     }
@@ -31,8 +31,10 @@ public class Brain{
     //Pide entero y se asegura que sea [ 1, 7]
     public int pedirOpcion (){
         int opcion = -1;
-        while(opcion < 1 && opcion > 7){
+        boolean Seguir = true;
+        while(Seguir){
             opcion = interfaz.askInt(MENU);
+            Seguir = !(1<= opcion && opcion <= 7);
         }
         return opcion;
     }
