@@ -1,3 +1,9 @@
+ /* Esta clase recibe la imagen principal y la convierte en una matriz 
+  * con valores específicos
+ *   
+ *  
+ */
+
 import javax.swing.*;
 public class Convertidor{
     private int [][] original;
@@ -27,11 +33,29 @@ public class Convertidor{
         figuras = 0;
         cont= 0;
     }
+    
+    /*
+     * @Función: verifica que la poscion de la matriz lienzo sea valida
+     * recibe la posicion exacta
+     * devuelve un boolean informando si es valida o no
+     * 
+     * 
+     *  
+     *  
+     */
 
     public boolean esValida(int f,int c){
         return original!=null && f >=0 && f < original.length && original[f]!=null && c >=0 && c < original[f].length;
     }
 
+     /* @Funcion recorre la imagen y le da un valor específico a cada elemento de la imagen (fondo, borde, etc)
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
+    
     public void recorrerImagen(){
         boolean buscar = true;
         int borde;
@@ -65,6 +89,14 @@ public class Convertidor{
             } 
         }
     }
+     /* @Funcion encuentra las manchas en la imagen de manera recursiva
+      * recibe la posicion donde se desea buscar y el color del que se desea pintar la mancha'
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     private void buscarManchas (int f, int c, int fondo){
         for (int o = 0; o < 8 ; ++o){
@@ -74,6 +106,15 @@ public class Convertidor{
             }
         }
     }    
+    
+     /* @Funcion encuentra el fondo de la imagen de manera recursiva
+      * recibe la primera poscion de la matriz de la imagen
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     private void detectarFondo(int f, int c){
         for (int o = 0; o < 8 ; o += 2){
@@ -83,6 +124,15 @@ public class Convertidor{
             }
         }
     }
+    
+     /* @Funcion busca todos los elementos vecino iguales de un punto de la imagen de manera recursiva
+      * recibe el punto exacto, el color de este y que numero desea poner en la nueva matriz
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     private void buscarVecinos (int f, int c, int borde, int color){
         for (int o = 0; o < 8 ; ++o){
@@ -92,6 +142,16 @@ public class Convertidor{
             }
         }
     }    
+    
+     /* @Funcion busca en un punto de una matriz especifica si hay alrededor de el un numero especifico 
+      * recibe la posicion de donde se desea buscar, el color que esta buscando y la matriz en la que se busca
+      * devuelve un booleando indicando si encontro o el numero
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     public boolean buscarAlrededor (int f, int c, int buscado,  int[][] ma){
         boolean hay = false;
@@ -102,6 +162,14 @@ public class Convertidor{
         }
         return hay;
     }
+     /* @Funcion imprime una matriz
+      * recibe la matriz a imprimir
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     public void toString(int[][] matriz){
         for(int f = 0; f < matriz.length; f++){
@@ -122,8 +190,15 @@ public class Convertidor{
 
     public int [][] getOriginal (){
         return original;
+        
     }
-
+ /* @Funcion ejecuta el metodo recorrerImagen, (es por comodidad, para llamar a run en vez de recorrerImagen)
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
     public void run(){
         recorrerImagen();
     }
