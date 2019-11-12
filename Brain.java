@@ -103,6 +103,9 @@ public class Brain{
         int n = -1; 
         do{
             n = interfaz.askInt("Ingrese el numero de la figura que desea ver");
+            if(n < 0 || n > inventario.getCantFiguras()){
+                interfaz.showMessage("Numero de figura no valido.");
+            }
         }while( n < 0 || n > inventario.getCantFiguras());
         inventario.mostrarPorNumero(n);
     }
