@@ -12,6 +12,7 @@ public class Brain{
     private BuscaDatos buscaDatos;
     private Recortador recortador;
     private Zoom zoomeador;
+    private Centrador centrador;
     
     public Brain ( String nombreImagen ){
         interfaz = new Interfaz();
@@ -24,6 +25,8 @@ public class Brain{
         recortador.run();   
         zoomeador = new Zoom (inventario);
         zoomeador.run();
+        centrador = new Centrador(inventario);
+        centrador.centrarFiguras();
     }
     
     /*
@@ -31,7 +34,8 @@ public class Brain{
      *  no quiera salir.
      */
     public void run(){
-        int opcion = 0 ;        
+        int opcion = 0 ;     
+        inventario.ordenarInventario();
         do{    
             opcion = pedirOpcion();
             ejecutarOpcion(opcion);           
