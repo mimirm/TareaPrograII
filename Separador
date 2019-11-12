@@ -1,3 +1,11 @@
+/*
+ * Esta clase recibe la imagen y convertida en el convertidor 
+ * y la separa en matrices individuales de cada figura, luego las
+ * mete en el inventario
+ *  
+ *  
+ */
+
 public class Separador{
     private Convertidor convertidor;
     private int [][] lienzo;
@@ -23,9 +31,27 @@ public class Separador{
         } 
     }
 
+    /*
+     * @Función: verifica que la poscion de la matriz lienzo sea valida
+     * recibe la posicion exacta
+     * devuelve un boolean informando si es valida o no
+     * 
+     * 
+     *  
+     *  
+     */
+
     public boolean esValida(int f,int c){
         return lienzo!=null && f >=0 && f < lienzo.length && lienzo[f]!=null && c >=0 && c < lienzo[f].length;
     }
+    
+ /* @Funcion recorre toda la imagen e invoca al metodo recursivo
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     public void separarImagen(){
         boolean buscar = true;    
@@ -38,6 +64,16 @@ public class Separador{
             } 
         }
     }
+    
+     /* @Funcion metodo recursivo que busca elementos iguales en la matriz (fondo de figura, borde, etc)
+      * recibe la posicion exacta donde se desea empezar a buscar y el color que se busca
+      * 
+ *   
+ * 
+ * 
+ *  
+ *  
+ */
 
     private void buscarVecinos (int f, int c, int fondo){
         copiaPintada[f][c] = original[f][c];
@@ -50,6 +86,14 @@ public class Separador{
         }
 
     }    
+     /* @Funcion imprime en pantalla una matriz
+      * recibe la matriz que se desea imprimir
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     public void toString(int[][] matriz){
         for(int f = 0; f < matriz.length; f++){
@@ -59,6 +103,15 @@ public class Separador{
             System.out.println("");
         }
     }
+    
+     /* @Funcion llena una matriz con un numero específico
+      * recibe la matriz a llenar y el numero 
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     public void pintarMatriz(int[][] x , int color){
         for (int contador = 0; contador < x.length; ++contador){
@@ -67,6 +120,14 @@ public class Separador{
             }
         } 
     }
+    
+     /* @Funcion ejecuta los metodos de la clase
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     public void run(){
         convertidor.run();
@@ -79,6 +140,14 @@ public class Separador{
             vaciarCopiaControl();
         }
     }
+    
+     /* @Funcion vacia la matriz copi
+ *  
+ * 
+ * 
+ *  
+ *  
+ */
 
     public void vaciarCopiaControl(){
         for (int f = 0; f < copiaControl.length; ++f){
@@ -88,7 +157,7 @@ public class Separador{
         } 
     }
 
-public Inventario getInventario(){
+    public Inventario getInventario(){
         return inventario;
     }
 }
