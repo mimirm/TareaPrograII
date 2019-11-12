@@ -1,41 +1,184 @@
-public class fiunnnnnnnnn{
-    public static final int [] SUMA_F = {-3, 0, 3, 0};
-    public static final int [] SUMA_C = {0, 3, 0,-3 };
-    public static final int [] ZOOM_F = {-1,-1,0};
+public class Zoom{
+    public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
+    public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
+    public static final int [] ZOOM_F = {1,1,0};
     public static final int [] ZOOM_C = {0,1,1};
-    public static final int [][] imagen = {{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1},{1,1,1,1,1}};
-    // intente que esta matriz entrara pero bluej no la detectaba
+    private int [][] zoom;
+    private int [][] zoomx;
+    private int fondo, contador, altura, anchura;
+    private Imagen i;
+    private Inventario inventario;
 
-    //aqui metes la matriz y el fondo para hacerle zoom a todo lo demas
-    //veo que se jode si la mancha es igual al fondo pero es lo que tengo por ahora
-    public void ZOOOOOOOOOOOOOOOOOOOOM (int [][] matriz, int fondo){
-        for(int fila=0; fila < matriz.length;++fila){
-            for(int columna=0; columna < matriz[fila].length; ++columna){
-                if(hayCampo(fila,columna, matriz) && matriz[fila][columna] != fondo){
-                    hacerZoom(fila,columna, matriz);
+    public Zoom(Inventario inventario){
+        this.inventario = inventario;
+        contador = 0;
+        altura = 0;
+        anchura = 0;
+    }
+
+    public void run(){
+        for(int n = 0; n < inventario.getCantFiguras(); n++){
+            System.out.println("antes");
+            for(int f = 0; f < inventario.getMatrizPintada(n).length; f++){
+                for(int c = 0; c < inventario.getMatrizPintada(n)[0].length; c++){
+                    System.out.print(" "+inventario.getMatrizPintada(n)[f][c]); 
+                } 
+                System.out.println("");
+
+            }
+            inventario.meterImagenPintada(hacerZoom(inventario.getMatrizPintada(n),n),n);
+            System.out.println("despues");
+            /*
+             * for(int f = 0; f < inventario.getMatrizPintada(n).length; f++){
+            for(int c = 0; c < inventario.getMatrizPintada(n)[0].length; c++){
+            System.out.print(" "+inventario.getMatrizPintada(n)[f][c]); 
+            } 
+            System.out.println("");
+
+            }
+             */
+        }
+    }
+
+    public int[][] hacerZoom(int [][] matriz, int n){
+        boolean seguir = true;
+        int [][] matrizZoomeada = new int[matriz.length][matriz[0].length];
+        for (int f = 0; f < matrizZoomeada.length; ++f){
+            for(int c = 0; c < matrizZoomeada[0].length; ++c){
+                matrizZoomeada[f][c] = 0;
+            }
+        }
+        int zoom = 0;
+        while(seguir){
+            try{
+                matrizZoomeada = zoomear(matriz);
+                ++zoom;
+            } catch(Exception e){
+                seguir = false;
+            }
+        }
+        inventario.setAlgo(n, 2, (int)(Math.pow(2,zoom)));
+        return matrizZoomeada;
+    }
+
+    /*
+     * este metodo es como un run que hace todo, usted mete la matriz con esto y se lo devuelve zoomeado 
+     * la matriz zoom se llena con la matriz que usted ingresa y la acomoda arriba a la izquierda
+     * zoomx es la matriz en la que se va a pegar el dibujo zoomeado
+     */
+    public int [][] zoomear(int [][] original){
+        zoom = new int [original.length][original[0].length]; 
+        zoomx = new int [original.length][original[0].length]; 
+        pintarMatriz(zoom,0); 
+        fondo = original[0][0];  
+        pintarMatriz(zoomx,fondo); 
+        buscarFondo(original); 
+        altoyancho(original); 
+        mover(original, altura, anchura); 
+        hacerZoom(); 
+        return zoomx; 
+    }
+
+    //esto es  un metodo que tan alto y que tan a la derecha esta la figura, ayuda para ponerla arriba a la izquierda
+    public void altoyancho(int [][] m){
+        int largo = 0;
+        int fondo = m[0][0];
+        boolean seguir = true;
+        for (int o = 0; o < m.length && seguir ; ++o){
+            for(int c = 0; c < m[o].length && seguir ; ++c){ 
+                if (m[o][c] != fondo ){
+                    altura = o;
+                    seguir = false;
                 }
+            } 
+        }
+        seguir = true;
+        anchura = m[0].length;
+        for (int o = 0; o < m.length && seguir ; ++o){
+            for(int c = 0; c < m[o].length && seguir ; ++c){ 
+                if (m[o][c] != fondo && c < anchura ){
+                    anchura = c;
+                }
+            } 
+        }
+    }
+
+    // coloca la figura arriba a la izquierda
+    public void mover(int [][] m, int alto,int  ancho){
+        boolean seguir = true;
+        int altoguia = alto -1;
+        int anchoguia = ancho - 1;
+        for (int o = 0; o < m.length && seguir ; ++o){
+            for(int c = 0; c < m[o].length && seguir ; ++c){ 
+                if (zoom[o][c] == 0 ){  
+                    zoom [o][c] = fondo;
+                    zoom [o - altoguia][c - anchoguia] = m [o][c];
+                }
+            } 
+        }
+    }
+
+    //pinta la matriz zoom con ceros, si cambia esto para poner -1 tenga cuidado porque se joden algunos metodos
+    public void pintarMatriz(int[][] x , int color){
+        for (int contador = 0; contador < x.length; ++contador){
+            for(int contador2 = 0; contador2 < x[contador].length; contador2++){
+                x[contador][contador2] = color;
+            }
+        } 
+    }
+
+    //con este metodo se pinta el fodo de zoom de manera recursiva
+    public void buscarFondo(int [][] m){
+        boolean buscar = true;
+        for (int o = 0; o < m.length ; ++o){
+            for(int c = 0; c < m[o].length ; ++c){ 
+                if (m[o][c] == fondo && buscar){
+                    detectarFondo(o,c, m);
+                    buscar = false;
+                }
+            } 
+        }
+    }
+
+    private void detectarFondo(int f, int c, int [][] m){
+        for (int o = 0; o < 8 ; o += 2){
+            if (esValida(f + SUMA_F[o],c + SUMA_C[o], m) && m[f + SUMA_F[o]][c + SUMA_C[o]] == m[f][c] && zoom[f + SUMA_F[o]][c + SUMA_C[o]] == 0    ){
+                zoom[f + SUMA_F[o]][c + SUMA_C[o]] = m[f + SUMA_F[o]][c + SUMA_C[o]];
+                detectarFondo(f + SUMA_F[o], c + SUMA_C[o], m);
             }
         }
     }
-    
-    //comprueba que hayan al menos 3 pixeles entre el pixel que se le quiere hacer zoom y el ultimo pixel antes del vacio
-    //hago 3 porque se duplican los pixeles 
-    //solo recorre en 4 direcciones dado que esan son las que van a pegar con el vacio al hacer zoom
-    public boolean hayCampo(int f, int c, int [][] matriz){
-        boolean campo = false;
-        for(int i=0; i < 4; ++i){
-            if(matriz[f+SUMA_F[i]][c+SUMA_C[i]] <= matriz[f][c] || matriz[f+SUMA_F[i]][c+SUMA_C[i]] > matriz[f][c]){
-                campo = true;
-            }
-        }
-        return campo;
+
+    public boolean esValida(int f,int c, int[][] m){
+        return m!=null && f >=0 && f < m.length && m[f]!=null && c >=0 && c < m[f].length;
     }
-    
-    //esto es lo que segun yo pienso qyue es el zoom
-    //recorre hacia arriba,diagonal derecha y hacia abajo para hacer el zoom
-    public void hacerZoom(int f, int c, int [][] matriz){
+
+    public void toString(int[][] matriz){
+        for(int f = 0; f < matriz.length; f++){
+            for(int c = 0; c < matriz[f].length; c++){
+                System.out.print(" "+matriz[f][c]); 
+            } 
+            System.out.println("");
+        }
+    }
+
+    // aplica el zoom  
+    public void hacerZoom(){
+        for (int o = 0; o < zoom.length ; ++o){
+            for(int c = 0; c < zoom[o].length ; ++c){ 
+                if (zoom[o][c] != fondo ){
+                    zoomx [o * 2][c * 2] = zoom[o][c]; 
+                    pintar(o * 2, c * 2, zoomx, zoom [o][c]);
+                }
+            } 
+        }         
+    }
+
+    //pinta una casilla de la matriz
+    public void pintar(int f, int c, int [][] m, int color){
         for(int i=0; i < 3; ++i){
-            matriz[f+ZOOM_F[i]][c+ZOOM_C[i]] = matriz[f][c];
+            m[f+ZOOM_F[i]][c+ZOOM_C[i]] = color;
         }
     }
+
 }
