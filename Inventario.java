@@ -12,6 +12,11 @@ public class Inventario{
     private int cantFiguras;
 
     public Inventario(int n){
+        try{
+            archivo = new PrintWriter ("Inventario.txt"); //no se si esto se quedara abierto desde que se llama al contructor.
+        }catch(Exception e){
+            System.err.println("Error al crear archivo con la informacion");  
+        }
         cantFiguras = n;
         inventario = new int [n][7];
         /*
@@ -43,13 +48,10 @@ public class Inventario{
      *  de empate. Se utiliza el algoritmo de seleccion.
      */
     public void ordenarInventario(){
-        //primero se ordena por manchas
-        //si hay igual cantidad de manchas se ordena por zoom
         int elMasMayor = 0;
         int temporal = 0;
         for(int f = 0; f< inventario.length; ++f){
             elMasMayor = encontrarMayor(f,1);
-            System.out.println(elMasMayor);
             if(inventario[f][1] != inventario[elMasMayor][1]){
                 for(int i=1; i<7; ++i){    
                     temporal = inventario [f][i];
@@ -68,6 +70,7 @@ public class Inventario{
                         temporal = inventario [f][i];
                         inventario[f][i] = inventario[siguiente][i];
                         inventario[siguiente][i] = temporal;
+                        //System.out.println("Entra a hacer swap");
                     }
                 }
                 }
@@ -149,11 +152,6 @@ public class Inventario{
      *  @Funcion: Metodo que realiza el archivo de texto que contiene la informacion del inventrio.
      */
     public void crearArchivo(){
-        try{
-            archivo = new PrintWriter ("Inventario.txt"); 
-        }catch(Exception e){
-            System.err.println("Error al crear archivo con la informacion");  
-        }
         archivo.print(inventario);
         archivo.close();
     }
