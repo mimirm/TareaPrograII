@@ -108,7 +108,7 @@ public class Brain{
     }
     
     /*
-     *  @Funcion: Metodo de cierre de la aplicacion. Se despide
+     *  @Funcion: Metodo de cierre de la aplicacion. Se despide del usuario
      */
     public void salir(){
         interfaz.showMessage("Gracias por la visita!");
