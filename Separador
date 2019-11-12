@@ -2,10 +2,7 @@
  * Esta clase recibe la imagen y convertida en el convertidor 
  * y la separa en matrices individuales de cada figura, luego las
  * mete en el inventario
- *  
- *  
  */
-
 public class Separador{
     private Convertidor convertidor;
     private int [][] lienzo;
@@ -16,7 +13,8 @@ public class Separador{
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
     private int area;
     private Inventario inventario;
-    public Separador(String nombreImagen){ // ponerle argumento
+    
+    public Separador(String nombreImagen){ 
         convertidor = new Convertidor(nombreImagen);
         area = 0;
         lienzo = convertidor.getLienzo();
@@ -33,26 +31,16 @@ public class Separador{
 
     /*
      * @Función: verifica que la poscion de la matriz lienzo sea valida
-     * recibe la posicion exacta
-     * devuelve un boolean informando si es valida o no
-     * 
-     * 
-     *  
-     *  
+     * @Param: recibe la posicion exacta
+     * @Return: devuelve un boolean informando si es valida o no 
      */
-
     public boolean esValida(int f,int c){
         return lienzo!=null && f >=0 && f < lienzo.length && lienzo[f]!=null && c >=0 && c < lienzo[f].length;
     }
-    
- /* @Funcion recorre toda la imagen e invoca al metodo recursivo
- *  
- * 
- * 
- *  
- *  
- */
 
+    /*
+     * @Funcion: recorre toda la imagen e invoca al metodo recursivo
+     */
     public void separarImagen(){
         boolean buscar = true;    
         for (int f = 0; f < lienzo.length && buscar  ; ++f){
@@ -64,17 +52,11 @@ public class Separador{
             } 
         }
     }
-    
-     /* @Funcion metodo recursivo que busca elementos iguales en la matriz (fondo de figura, borde, etc)
-      * recibe la posicion exacta donde se desea empezar a buscar y el color que se busca
-      * 
- *   
- * 
- * 
- *  
- *  
- */
 
+    /* 
+     * @Funcion: metodo recursivo que busca elementos iguales en la matriz (fondo de figura, borde, etc)
+     * @Param: recibe la posicion exacta donde se desea empezar a buscar y el color que se busca. 
+     */
     private void buscarVecinos (int f, int c, int fondo){
         copiaPintada[f][c] = original[f][c];
         copiaControl[f][c]= lienzo[f][c];
@@ -84,35 +66,12 @@ public class Separador{
                 buscarVecinos(f + SUMA_F[d], c + SUMA_C[d],fondo);
             }
         }
+    }  
 
-    }    
-     /* @Funcion imprime en pantalla una matriz
-      * recibe la matriz que se desea imprimir
- *  
- * 
- * 
- *  
- *  
- */
-
-    public void toString(int[][] matriz){
-        for(int f = 0; f < matriz.length; f++){
-            for(int c = 0; c < matriz[f].length; c++){
-                System.out.print(" "+matriz[f][c]); 
-            } 
-            System.out.println("");
-        }
-    }
-    
-     /* @Funcion llena una matriz con un numero específico
-      * recibe la matriz a llenar y el numero 
- *  
- * 
- * 
- *  
- *  
- */
-
+    /* 
+     * @Funcion: llena una matriz con un numero específico
+     * @Param: recibe la matriz a llenar y el numero  
+     */
     public void pintarMatriz(int[][] x , int color){
         for (int contador = 0; contador < x.length; ++contador){
             for(int contador2 = 0; contador2 < x[contador].length; contador2++){
@@ -120,15 +79,10 @@ public class Separador{
             }
         } 
     }
-    
-     /* @Funcion ejecuta los metodos de la clase
- *  
- * 
- * 
- *  
- *  
- */
 
+    /* 
+     * @Funcion: ejecuta los metodos de la clase  
+     */
     public void run(){
         convertidor.run();
         inventario = new Inventario(convertidor.getFiguras());
@@ -140,15 +94,10 @@ public class Separador{
             vaciarCopiaControl();
         }
     }
-    
-     /* @Funcion vacia la matriz copi
- *  
- * 
- * 
- *  
- *  
- */
 
+    /* 
+     * @Funcion: vacia la matriz copia 
+     */
     public void vaciarCopiaControl(){
         for (int f = 0; f < copiaControl.length; ++f){
             for(int c = 0; c < copiaControl[0].length; c++){
