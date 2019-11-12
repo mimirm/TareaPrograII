@@ -115,7 +115,7 @@ public class Recortador{
             }
         }
         llenarVacio(destino);
-        inventario.meterImagenPintada( destino, n);
+        inventario.setImagenPintada( destino, n);
     }
 
     /*
