@@ -1,3 +1,7 @@
+/*
+ * Clase Brain: es quien lleva la logica de la aplicacion e inicializa
+ * la interaccion con el usuario.
+ */
 public class Brain{
     public static final String MENU = "1.Ver inventario completo.\n2.Ver imagen segun su numero de figura.\n3.Ver imagenes con cantidad de manchas en un rango.\n4.Ver imagenes con escala en un rango.\n5.Ver imagenes que tienen dimensiones en un rango.\n6.Ver imagenes de area en un rango.\n7.Salir.";
     public static final String MIN = "Digite el minimo para el rango:";
@@ -6,7 +10,8 @@ public class Brain{
     private Inventario inventario;
     private Separador separador;
     private BuscaDatos buscaDatos;
-    private Modificador modificador;
+    private Recortador recortador;
+    private Zoom zoomeador;
     
     public Brain ( String nombreImagen ){
         interfaz = new Interfaz();
@@ -15,10 +20,16 @@ public class Brain{
         inventario = separador.getInventario();
         buscaDatos = new BuscaDatos(inventario);
         buscaDatos.llenarInventario();
-        modificador = new Modificador (inventario);
-        modificador.run();        
+        recortador = new Recortador (inventario);
+        recortador.run();   
+        zoomeador = new Zoom (inventario);
+        //zoomeador.run();
     }
     
+    /*
+     *  @Funcion: Inicia la aplicacion, la ejecuta mientras el usuario
+     *  no quiera salir.
+     */
     public void run(){
         int opcion = 0 ;        
         do{    
@@ -28,7 +39,11 @@ public class Brain{
         while (opcion != 7);
     }
     
-    //Pide entero y se asegura que sea [ 1, 7]
+    /*
+     *  @Funcion: Pide la opcion de la aplicacion que el usuario quiere ejecutar.
+     *            Se asegura que sea un entero entre [1,7]
+     *  @Return: entero que refleja la opcion elejida
+     */
     public int pedirOpcion (){
         int opcion = -1;
         boolean Seguir = true;
@@ -39,6 +54,10 @@ public class Brain{
         return opcion;
     }
     
+    /*
+     *  @Funcion: Segun la opcion elegida, ejecuta lo necesario para cumplir.
+     *  @Param: Entero que refleja la opcion por ejecutar
+     */
     public void ejecutarOpcion(int opcion){
         switch(opcion){
             case 1:
@@ -70,6 +89,9 @@ public class Brain{
         }
     }
     
+    /*
+     *  @Funcion: Metodo de cierre de la aplicacion. Se despide
+     */
     public void salir(){
         interfaz.showMessage("Gracias por la visita!");
     }
