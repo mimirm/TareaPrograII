@@ -16,12 +16,58 @@ public class Recortador{
         System.out.println(columnasMayor);
     }
 
-    public void recortarMatrices(){
+    /*
+     *  @Funcion: Recorre el inventario y saca el ancho mayor. Lo vuelve impar y suma dos
+     *  para que las futuras matrices tengan fondo de imagen.
+     *  @Return: Entero que refleja la dimencion en x de las futuras matrices recortadas.
+     */
+    public int findColumnasMayor(){
+        int ancho = inventario.getAlgo(0,4);
+        for(int f = 0; f < inventario.getCantFiguras(); ++f){
+            if(ancho < inventario.getAlgo( f, 4)){
+                ancho = inventario.getAlgo( f , 4);   //lo que se guarda en la columnas de "columnas"
+            }
+        }
+        if(ancho%2 == 0){
+            ancho += 1;
+        }
+        return ancho+2;
+    }
+
+    /*
+     *  @Funcion: Recorre el inventario y saca el alto mayor. Lo vuelve impar y suma dos
+     *  para que las futuras matrices tengan fondo de imagen.
+     *  @Return: Entero que refleja la dimencion en y de las futuras matrices recortadas.
+     */
+    public int findFilasMayor(){
+        int alto = 0;
+        for(int f=0; f<inventario.getCantFiguras(); ++f){
+            if(alto < inventario.getAlgo (f , 5)){
+                alto = inventario.getAlgo (f , 5);
+            }
+        }
+        if(alto%2 == 0){
+            alto ++;
+        }
+        return alto+2;
+    }
+
+    /*
+     *  @Funcion: Metodo de llamado inicial al trabajo del recortador. 
+     */
+    public void run(){
         for(int n = 0; n < inventario.getCantFiguras(); ++n){
             recortar(inventario.getMatrizControl(n), inventario.getMatrizPintada(n), n );
         }
     }
 
+    /*
+     *  @Funcion: Metodo que recorta desde la esquina superior izquiera de la figura, 
+     *  hasta, la esquina inferior derecha. Pega lo que recorta en otra matriz y la
+     *  guarda donde estaba la matriz pintada sin recortar.
+     *  @Param: matriz de control de la figura, matriz pintada de la figura, posicion
+     *  n de la figura.
+     */
     public void recortar( int[][] control, int[][] pintada, int n){
         int [][] destino = new int [filasMayor][ columnasMayor];
         for (int f = 0; f < destino.length; ++f){
@@ -72,6 +118,11 @@ public class Recortador{
         inventario.meterImagenPintada( destino, n);
     }
 
+    /*
+     *  @Funcion: Llena aquellos espacios vacios de la matriz recortada que no fueron
+     *  llenados porque no pertenecen a la figura, espacio sobrante.
+     *  @Param: Matriz a llenar.
+     */
     public void llenarVacio( int[][] m){
         int fondo = m[0][0];
         for (int f = 0; f < m.length; ++f){
@@ -83,37 +134,13 @@ public class Recortador{
         }
     }
 
+    /*
+     *  @Funcion: Se asegura que la casilla siendo accesada deuna matriz sea valida.
+     *  @Param: f y c siendo las coordenadas a las que se quiere accesar, la matriz m
+     *  es la matriz de referencia.
+     *  @Return: Valor booleano que refleja si es valida la posicion o no.
+     */
     public boolean valido(int f, int c, int[][]m){
         return m != null && f>= 0 && f< m.length && c>=0 && c < m[0].length;
-    }
-
-    public int findColumnasMayor(){
-        int ancho = inventario.getAlgo(0,4);
-        for(int f = 0; f < inventario.getCantFiguras(); ++f){
-            if(ancho < inventario.getAlgo( f, 4)){
-                ancho = inventario.getAlgo( f , 4);   //lo que se guarda en la columnas de "columnas"
-            }
-        }
-        if(ancho%2 == 0){
-            ancho += 1;
-        }
-        return ancho+2;
-    }
-
-    public int findFilasMayor(){
-        int alto = 0;
-        for(int f=0; f<inventario.getCantFiguras(); ++f){
-            if(alto < inventario.getAlgo (f , 5)){
-                alto = inventario.getAlgo (f , 5);
-            }
-        }
-        if(alto%2 == 0){
-            alto ++;
-        }
-        return alto+2;
-    }
-
-    public void run(){
-        recortarMatrices();
     }
 }
