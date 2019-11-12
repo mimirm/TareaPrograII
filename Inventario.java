@@ -51,29 +51,32 @@ public class Inventario{
         //primero se ordena por manchas
         //si hay igual cantidad de manchas se ordena por zoom
         int elMasMayor = 0;
+        int temporal = 0;
         for(int f = 0; f< inventario.length; ++f){
             elMasMayor = encontrarMayor(f,1);
+            System.out.println(elMasMayor);
             if(inventario[f][1] != inventario[elMasMayor][1]){
-                for(int i=1; i<inventario.length; ++i){    
-                    swap(inventario[f][i],inventario[elMasMayor][i]);
+                for(int i=1; i<7; ++i){    
+                    temporal = inventario [f][i];
+                    inventario[f][i] = inventario[elMasMayor][i];
+                    inventario[elMasMayor][i] = temporal;
                 }
             }
         }
         int siguiente = 0;
-        for(int f = 0; f<inventario.length; ++f){
+        temporal = 0;
+        for(int f = 0; f < (cantFiguras-1); ++f){
             siguiente = ++f;
             if(inventario[f][1]==inventario[siguiente][1]){
                 if(inventario[f][2] < inventario[siguiente][2]){
-                    for(int i=1; i<inventario.length; ++i){    
-                        swap(inventario[f][i],inventario[siguiente][i]);
-                    }
-                }else{
-                    for(int i=1; i<inventario.length; ++i){    
-                        swap(inventario[siguiente][i],inventario[f][i]);
+                    for(int i=1; i<7; ++i){    
+                        temporal = inventario [f][i];
+                        inventario[f][i] = inventario[siguiente][i];
+                        inventario[siguiente][i] = temporal;
                     }
                 }
+                }
             }
-        }
     }
 
     /*
@@ -90,16 +93,6 @@ public class Inventario{
             }
         }
         return posicion;
-    }
-
-    /*
-     *  @Funcion: Metodo Swap. Cambia los valores de dos variables entre ellas.
-     *  @Param: Dos variables enteras.
-     */
-    public void swap(int i, int j){
-        int temp = j;
-        j=i;
-        i=temp;
     }
 
     /*
