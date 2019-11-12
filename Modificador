@@ -6,27 +6,33 @@ public class Modificador{
     public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
     private Inventario inventario;
     private int filasMayor, columnasMayor;
-    private Zoom zoomeador;
-    private int zoom;
+
     public Modificador (Inventario inventario){
         this.inventario = inventario;
-        zoomeador = new Zoom();
         filasMayor = findFilasMayor();
         columnasMayor = findColumnasMayor();
-        zoom = 0;
+        System.out.println(filasMayor);
+        System.out.println(columnasMayor);
     }
-   public void recortarMatrices(){
+
+    public void recortarMatrices(){
         for(int n = 0; n < inventario.getCantFiguras(); ++n){
             recortar(inventario.getMatrizControl(n), inventario.getMatrizPintada(n), n );
         }
     }
-    
+
     public void recortar( int[][] control, int[][] pintada, int n){
         int [][] destino = new int [filasMayor][ columnasMayor];
         for (int f = 0; f < destino.length; ++f){
             for(int c = 0; c < destino[0].length; ++c){
-               destino[f][c] = 0;
+                destino[f][c] = 0;
             }
+        }
+        for(int f = 0; f < control.length; f++){
+            for(int c = 0; c < control[f].length; c++){
+                System.out.print(" "+control[f][c]); 
+            } 
+            System.out.println("");
         }
         int filaInicial = 0;
         int columnaInicial = 0;
@@ -35,14 +41,14 @@ public class Modificador{
         for (int f = 0; f < control.length && filaInicial == 0; ++f){
             for(int c = 0; c < control[0].length && filaInicial ==0; ++c){
                 if( control[f][c] == -3 ){
-                    filaInicial = f - 1;
+                    filaInicial = f ;
                 }
             }
         } 
         for (int c = 0; c < control[0].length && columnaInicial == 0; ++c){
             for(int f = 0; f < control.length && columnaInicial == 0; ++f){
-               if( control[f][c] == -3 ){
-                    columnaInicial = c - 1;
+                if( control[f][c] == -3 ){
+                    columnaInicial = c;
                 }
             }
         } 
@@ -55,34 +61,58 @@ public class Modificador{
         } 
         for (int c = (control[0].length-1); c > 0 && columnaFinal == 0; --c){
             for(int f = (control.length-1); f > 0  && columnaFinal == 0; --f){
-               if( control[f][c] == -3 ){
+                if( control[f][c] == -3 ){
                     columnaFinal = c + 1;
                 }
             }
         } 
-        
-        for (int f = 0; f < destino.length && f <= filaFinal; ++f){
+        System.out.println(filaInicial);
+        System.out.println(columnaInicial);
+        System.out.println(filaFinal);
+        System.out.println(columnaFinal);
+
+        for (int f = 0; f < destino.length && f <= filaFinal ; ++f){
             for(int c = 0; c < destino[0].length && c <= columnaFinal ; ++c){
-               destino[f][c] = pintada [filaInicial + f][columnaInicial + c];
+                if(valido((filaInicial-1 )+ f,(columnaInicial-1 )+ c, pintada)){
+                    destino[f][c] = pintada [(filaInicial-1 )+ f][(columnaInicial-1 )+ c];
+                }
             }
         }
+        llenarVacio(destino);
+        for(int f = 0; f < destino.length; f++){
+            for(int c = 0; c < destino[0].length; c++){
+                System.out.print(" "+destino[f][c]); 
+            } 
+            System.out.println("");
+        }
+        inventario.meterImagenPintada( destino, n);
+    }
 
-        inventario.meterImagenPintada( centrar(hacerZoom(destino)), n);
+    public void llenarVacio( int[][] m){
+        int fondo = m[0][0];
+        for (int f = 0; f < m.length; ++f){
+            for(int c = 0; c < m[0].length; ++c){
+                if(m[f][c] == 0){
+                    m[f][c] = fondo;
+                }
+            }
+        }
+    }
+
+    public boolean valido(int f, int c, int[][]m){
+        return m != null && f>= 0 && f< m.length && c>=0 && c < m[0].length;
     }
 
     public int findColumnasMayor(){
         int ancho = inventario.getAlgo(0,4);
-        System.out.println(ancho);
         for(int f = 0; f < inventario.getCantFiguras(); ++f){
             if(ancho < inventario.getAlgo( f, 4)){
-                System.out.println("Entra a findAnchoMAyor");
                 ancho = inventario.getAlgo( f , 4);   //lo que se guarda en la columnas de "columnas"
             }
         }
         if(ancho%2 == 0){
             ancho += 1;
         }
-        System.out.println(ancho+2);
         return ancho+2;
     }
 
@@ -98,22 +128,7 @@ public class Modificador{
         }
         return alto+2;
     }
-    
-    public int [][] hacerZoom(int [][] matriz){
-        boolean seguir = true;
-        int [][] matrizZoomeada = matriz;
-        zoom = 0;
-        while(seguir){
-            try{
-                matrizZoomeada = zoomeador.zoomear(matriz);
-                ++zoom;
-            } catch(Exception e){
-                seguir = false;
-            }
-        }
-        return matrizZoomeada;
-    }
-    
+
     public void run(){
         recortarMatrices();
     }
