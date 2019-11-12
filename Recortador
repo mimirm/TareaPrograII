@@ -12,8 +12,6 @@ public class Recortador{
         this.inventario = inventario;
         filasMayor = findFilasMayor();
         columnasMayor = findColumnasMayor();
-        System.out.println(filasMayor);
-        System.out.println(columnasMayor);
     }
 
     /*
