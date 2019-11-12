@@ -13,7 +13,7 @@ public class Brain{
     private Recortador recortador;
     private Zoom zoomeador;
     private Centrador centrador;
-    
+
     public Brain ( String nombreImagen ){
         interfaz = new Interfaz();
         separador = new Separador(nombreImagen);
@@ -30,7 +30,7 @@ public class Brain{
         inventario.ordenarInventario();
         inventario.crearArchivo();
     }
-    
+
     /*
      *  @Funcion: Inicia la aplicacion, la ejecuta mientras el usuario
      *  no quiera salir.
@@ -43,7 +43,7 @@ public class Brain{
         }
         while (opcion != 7);
     }
-    
+
     /*
      *  @Funcion: Pide la opcion de la aplicacion que el usuario quiere ejecutar.
      *            Se asegura que sea un entero entre [1,7]
@@ -58,7 +58,7 @@ public class Brain{
         }
         return opcion;
     }
-    
+
     /*
      *  @Funcion: Segun la opcion elegida, ejecuta lo necesario para cumplir.
      *  @Param: Entero que refleja la opcion por ejecutar
@@ -66,37 +66,37 @@ public class Brain{
     public void ejecutarOpcion(int opcion){
         switch(opcion){
             case 1:
-                //Mostrar el inventario completo
-                interfaz.showMessage(inventario.toString());
+            //Mostrar el inventario completo
+            interfaz.showMessage(inventario.toString());
             break;
             case 2:
-                //Mostrar una imagen por numero de figura
-                mostrarPorNumero();
+            //Mostrar una imagen por numero de figura
+            mostrarPorNumero();
             break;
             case 3:
-                inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),1);
-                // Mostrar las imagenes que tienen unas manchas en un rango especifico
+            inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),1);
+            //Mostrar las imagenes que tienen unas manchas en un rango especifico
             break;
             case 4:
-                inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),2);
-                // Mostrar las imagenes que tienen una escala en un rango especifico
+            inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),2);
+            //Mostrar las imagenes que tienen una escala en un rango especifico
             break;
             case 5:
-                inventario.buscarDimensiones(interfaz.askInt(MIN),interfaz.askInt(MAX));
-                //Mostrar las imagenes que tienen una dimension original en un rango especifico
+            inventario.buscarDimensiones(interfaz.askInt(MIN),interfaz.askInt(MAX));
+            //Mostrar las imagenes que tienen una dimension original en un rango especifico
             break;
             case 6:
-                inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),3);
-                // Mostrar las imagenes que tienen un area en un rango especifico.
+            inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),3);
+            //Mostrar las imagenes que tienen un area en un rango especifico.
             break;
             case 7:
-                // Cierre de la aplicacion
-                salir();
+            // Cierre de la aplicacion
+            salir();
             break;
         }
     }
-    
-     /*
+
+    /*
      *  @Funcion: Pide al usuario el numero de figura que desea ver y se la muestra.
      */
     public void mostrarPorNumero(){
@@ -106,9 +106,9 @@ public class Brain{
         }while( n < 0 || n > inventario.getCantFiguras());
         inventario.mostrarPorNumero(n);
     }
-    
+
     /*
-     *  @Funcion: Metodo de cierre de la aplicacion. Se despide del usuario
+     *  @Funcion: Metodo de cierre de la aplicacion. Se despide
      */
     public void salir(){
         interfaz.showMessage("Gracias por la visita!");
