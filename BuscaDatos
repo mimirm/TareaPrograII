@@ -135,7 +135,7 @@ public class BuscaDatos{
     }
     
     /*
-     *  @Funcion: Se asegura que se esta accediendo auna posicion valida de la matriz
+     *  @Funcion: Se asegura que se esta accediendo a una posicion valida de la matriz
      *  @Param: f y c siendo la posicion de la matriz.
      *  @Return: Valor booleano que refleja si es valida o no la posicion.
      */
