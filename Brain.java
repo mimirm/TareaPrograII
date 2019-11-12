@@ -27,6 +27,8 @@ public class Brain{
         zoomeador.run();
         centrador = new Centrador(inventario);
         centrador.centrarFiguras();
+        inventario.ordenarInventario();
+        inventario.crearArchivo();
     }
     
     /*
@@ -35,7 +37,6 @@ public class Brain{
      */
     public void run(){
         int opcion = 0 ;     
-        inventario.ordenarInventario();
         do{    
             opcion = pedirOpcion();
             ejecutarOpcion(opcion);           
