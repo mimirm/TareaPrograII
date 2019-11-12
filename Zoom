@@ -2,7 +2,6 @@
  *  @esta clase le hace zoom a las figuras del inventario y las
  *  vuelve a almacenar
  */
-
 public class Zoom{
     public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
@@ -27,25 +26,7 @@ public class Zoom{
 
     public void run(){
         for(int n = 0; n < inventario.getCantFiguras(); n++){
-            System.out.println("antes");
-            for(int f = 0; f < inventario.getMatrizPintada(n).length; f++){
-                for(int c = 0; c < inventario.getMatrizPintada(n)[0].length; c++){
-                    System.out.print(" "+inventario.getMatrizPintada(n)[f][c]); 
-                } 
-                System.out.println("");
-
-            }
-            System.out.println("despues");
-
             inventario.setImagenPintada(hacerZoom(inventario.getMatrizPintada(n),n),n);
-
-            for(int f = 0; f < inventario.getMatrizPintada(n).length; f++){
-                for(int c = 0; c < inventario.getMatrizPintada(n)[0].length; c++){
-                    System.out.print(" "+inventario.getMatrizPintada(n)[f][c]); 
-                } 
-                System.out.println("");
-
-            }
         }
     }
 
@@ -193,19 +174,6 @@ public class Zoom{
      */
     public boolean esValida(int f,int c, int[][] m){
         return m!=null && f >=0 && f < m.length && m[f]!=null && c >=0 && c < m[f].length;
-    }
-
-    /* 
-     * @Funcion: imprime en pantalla una matriz
-     * @Param: recibe la matriz que se desea imprimir   
-     */
-    public void toString(int[][] matriz){
-        for(int f = 0; f < matriz.length; f++){
-            for(int c = 0; c < matriz[f].length; c++){
-                System.out.print(" "+matriz[f][c]); 
-            } 
-            System.out.println("");
-        }
     }
 
     /* 
