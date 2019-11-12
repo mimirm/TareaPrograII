@@ -134,8 +134,8 @@ public class Separador{
         inventario = new Inventario(convertidor.getFiguras());
         for(int c = 0; c < convertidor.getFiguras(); ++c){
             separarImagen();
-            inventario.meterImagenPintada(copiaPintada,c );
-            inventario.meterImagenControl(copiaControl,c);
+            inventario.setImagenPintada(copiaPintada,c );
+            inventario.setImagenControl(copiaControl,c);
             pintarMatriz(copiaPintada,1);
             vaciarCopiaControl();
         }
