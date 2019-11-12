@@ -1,9 +1,6 @@
- /* @esta clase le hace zoom a las figuras del inventario y las
+ /* 
+ *  @esta clase le hace zoom a las figuras del inventario y las
  *  vuelve a almacenar
- * 
- * 
- *  
- *  
  */
 
 
@@ -26,12 +23,8 @@ public class Zoom{
     }
     
     
-     /* @Funcion le hace zoom a cada figura del inventario
- *  
- * 
- * 
- *  
- *  
+ /*
+ *  @Funcion: le hace zoom a cada figura del inventario
  */
 
     public void run(){
@@ -56,22 +49,15 @@ public class Zoom{
             System.out.println("");
 
             }
-            
         }
     }
     
-     /* @Funcion Realiza el zoom a una matriz 
-      * tambien verifica cuantas veces se le hizo zoom a la figura
-      * 
-      * recibe la matriz a hacer zoom y en que posicion del inventario se va a añadir.
-      * devuelve la matriz ya con el zoom
- *  
- * 
- * 
- *  
- *  
- */
-
+    /* 
+    * @Funcion: Realiza el zoom a una matriz, tambien verifica cuantas 
+    *  veces se le hizo zoom a la figura
+    * @Param: recibe la matriz a hacer zoom y en que posicion del inventario se va a añadir.
+    * @Return: devuelve la matriz ya con el zoom
+    */
     public int[][] hacerZoom(int [][] matriz, int n){
         boolean seguir = true;
         int [][] matrizZoomeada = new int[matriz.length][matriz[0].length];
@@ -98,15 +84,11 @@ public class Zoom{
         return matrizZoomeada;
     }
 
-    /* @Funcion realiza todos los pasos para hacer el zoom
-     * recibe la matriz a hacer zoom
-     * devuelve la matriz ya con zoom
- *  
- * 
- * 
- *  
- *  
- */
+    /* 
+     * @Funcion: realiza todos los pasos para hacer el zoom
+     * @Param: recibe la matriz a hacer zoom
+     * @Return: devuelve la matriz ya con zoom 
+     */
     public int [][] zoomear(int [][] original){
         zoom = new int [original.length][original[0].length]; 
         zoomx = new int [original.length][original[0].length]; 
@@ -120,14 +102,10 @@ public class Zoom{
         return zoomx; 
     }
 
-     /* @Funcion busca la altura y en la columna en la que se encuentra la imagen para poder acomodarla arriba a la izquierda de la matriz
-      * recibe la matriz en la que se desea buscar
- *  
- * 
- * 
- *  
- *  
- */
+     /* 
+      * @Funcion: busca la altura y en la columna en la que se encuentra la imagen para poder acomodarla arriba a la izquierda de la matriz
+      * @Param: recibe la matriz en la que se desea buscar 
+      */
     public void altoyancho(int [][] m){
         int largo = 0;
         int fondo = m[0][0];
@@ -151,14 +129,10 @@ public class Zoom{
         }
     }
 
-   /* @Funcion coloca la figura arriba a la izquierda de la matriz
-    * recibe la matriz a mover, y las posiciones calculadas en altoyancho
- *  
- * 
- * 
- *  
- *  
- */
+   /* 
+    * @Funcion: coloca la figura arriba a la izquierda de la matriz
+    * @Return: recibe la matriz a mover, y las posiciones calculadas en altoyancho 
+    */
     public void mover(int [][] m, int alto,int  ancho){
         boolean seguir = true;
         int altoguia = alto -1;
@@ -173,14 +147,10 @@ public class Zoom{
         }
     }
 
-     /* @Funcion llena una matriz con un numero especifico
-      * recibe la matriz a pintar y el numero
- *  
- * 
- * 
- *  
- *  
- */
+     /*
+      * @Funcion: llena una matriz con un numero especifico
+      * @Return: recibe la matriz a pintar y el numero.  
+      */
     public void pintarMatriz(int[][] x , int color){
         for (int contador = 0; contador < x.length; ++contador){
             for(int contador2 = 0; contador2 < x[contador].length; contador2++){
@@ -188,15 +158,11 @@ public class Zoom{
             }
         } 
     }
- /* @Funcion busca en la matriz y llama al metodo recursivo para buscar el fondo de una imagen
-      * recibe la matriz a la que se desea buscar el fondo
- *  
- * 
- * 
- *  
- *  
- */
     
+    /* 
+     * @Funcion: busca en la matriz y llama al metodo recursivo para buscar el fondo de una imagen
+     * @Return: recibe la matriz a la que se desea buscar el fondo
+     */
     public void buscarFondo(int [][] m){
         boolean buscar = true;
         for (int o = 0; o < m.length ; ++o){
@@ -208,14 +174,11 @@ public class Zoom{
             } 
         }
     }
-     /* @Funcion encuentra el fondo de la imagen de manera recursiva
-      * recibe la primera poscion de la matriz de la imagen y la matriz en la que se desea trabajar
- *  
- * 
- * 
- *  
- *  
- */
+    
+     /* 
+      * @Funcion: encuentra el fondo de la imagen de manera recursiva
+      * @Param: recibe la primera poscion de la matriz de la imagen y la matriz en la que se desea trabajar. 
+      */
 
     private void detectarFondo(int f, int c, int [][] m){
         for (int o = 0; o < 8 ; o += 2){
@@ -225,30 +188,20 @@ public class Zoom{
             }
         }
     }
-
     
     /*
      * @Función: verifica que la poscion de la matriz lienzo sea valida
-     * recibe la posicion exacta
-     * devuelve un boolean informando si es valida o no
-     * 
-     * 
-     *  
-     *  
+     * @Param: recibe la posicion exacta
+     * @Return: devuelve un boolean informando si es valida o no  
      */
     public boolean esValida(int f,int c, int[][] m){
         return m!=null && f >=0 && f < m.length && m[f]!=null && c >=0 && c < m[f].length;
     }
     
-    /* @Funcion imprime en pantalla una matriz
-      * recibe la matriz que se desea imprimir
- *  
- * 
- * 
- *  
- *  
- */
-
+   /* 
+    * @Funcion: imprime en pantalla una matriz
+    * @Param: recibe la matriz que se desea imprimir   
+    */
     public void toString(int[][] matriz){
         for(int f = 0; f < matriz.length; f++){
             for(int c = 0; c < matriz[f].length; c++){
@@ -257,11 +210,10 @@ public class Zoom{
             System.out.println("");
         }
     }
-/* @Funcion realiza las operaciones para hacer el zoom
- *     
- *  
- *
- */
+    
+   /* 
+    * @Funcion: realiza las operaciones para hacer el zoom.
+    */
     public void hacerZoom(){
         for (int o = 0; o < zoom.length ; ++o){
             for(int c = 0; c < zoom[o].length ; ++c){ 
@@ -273,18 +225,12 @@ public class Zoom{
         }         
     }
 
-   /* @Funcion pinta las tres casillas que rodean al punto que se multiplico en el zoom
-      * recibe el putno, la matriz en la que se trabaja y de que color se desea pintar 
- *  
- * 
- * 
- *  
- *  
- */
+   /* @Funcion: pinta las tres casillas que rodean al punto que se multiplico en el zoom
+    * @Param: recibe el putno, la matriz en la que se trabaja y de que color se desea pintar  
+    */
     public void pintar(int f, int c, int [][] m, int color){
         for(int i=0; i < 3; ++i){
             m[f+ZOOM_F[i]][c+ZOOM_C[i]] = color;
         }
     }
-
 }
