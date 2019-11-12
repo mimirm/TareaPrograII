@@ -21,7 +21,7 @@ public class BuscaDatos{
             inventario.setAlgo( i, 1, contarManchas(inventario.getMatrizControl(i)));
             inventario.setAlgo( i, 3, medirArea(inventario.getMatrizControl(i)));
             inventario.setAlgo( i, 4, findColumnas(inventario.getMatrizControl(i)));
-            inventario.setAlgo( i, 5,findFilas(inventario.getMatrizControl(i)));
+            inventario.setAlgo( i, 5, findFilas(inventario.getMatrizControl(i)));
         }
     }
     
