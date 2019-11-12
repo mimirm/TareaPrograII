@@ -1,215 +1,116 @@
 /*
- * Esta clase es capaz de guardar y devolver las caracteristicas de las 
- *  figuras analizadas: Numero de figura, numero de manchas, zoom, area, 
- *  altura, ancho y posicion en el Catalogo donde esta guardada tal figura. 
+ * Clase Brain: es quien lleva la logica de la aplicacion e inicializa
+ * la interaccion con el usuario.
  */
-import java.io.PrintWriter;
-public class Inventario{
-    private int inventario [][];
-    private Imagen [] catalogoPintado;
-    private Imagen [] catalogoControl;
-    private PrintWriter archivo;
-    private int cantFiguras;
+public class Brain{
+    public static final String MENU = "1.Ver inventario completo.\n2.Ver imagen segun su numero de figura.\n3.Ver imagenes con cantidad de manchas en un rango.\n4.Ver imagenes con escala en un rango.\n5.Ver imagenes que tienen dimensiones en un rango.\n6.Ver imagenes de area en un rango.\n7.Salir.";
+    public static final String MIN = "Digite el minimo para el rango:";
+    public static final String MAX = "Digite el maximo para el rango:";
+    private Interfaz interfaz;
+    private Inventario inventario;
+    private Separador separador;
+    private BuscaDatos buscaDatos;
+    private Recortador recortador;
+    private Zoom zoomeador;
+    private Centrador centrador;
 
-    public Inventario(int n){
-        cantFiguras = n;
-        inventario = new int [n][7];
-        /*
-         * Las casillas contienen: 0 - Numero de figura
-         *                          1 - Cantidad de manchas
-         *                          2 - Zoom
-         *                          3 - Area
-         *                          4 - Ancho
-         *                          5 - Altura
-         */
-        catalogoPintado = new Imagen [n];  //Donde se encuentran las matrices con color
-        catalogoControl = new Imagen [n];  //Donde se encuentran las matrices de control
-        int o = 1;
-        for( int f = 0 ; f < inventario.length; ++f){
-            for(int c = 0; c < inventario[0].length; ++c){
-                inventario[f][c] = 0;
-            }
+    public Brain ( String nombreImagen ){
+        interfaz = new Interfaz();
+        separador = new Separador(nombreImagen);
+        separador.run();
+        inventario = separador.getInventario();
+        buscaDatos = new BuscaDatos(inventario);
+        buscaDatos.llenarInventario();
+        recortador = new Recortador (inventario);
+        recortador.run();   
+        zoomeador = new Zoom (inventario);
+        zoomeador.run();
+        centrador = new Centrador(inventario);
+        centrador.centrarFiguras();
+        inventario.ordenarInventario();
+        inventario.crearArchivo();
+    }
+
+    /*
+     *  @Funcion: Inicia la aplicacion, la ejecuta mientras el usuario
+     *  no quiera salir.
+     */
+    public void run(){
+        int opcion = 0 ;     
+        do{    
+            opcion = pedirOpcion();
+            ejecutarOpcion(opcion);           
         }
-        for(int i=0; i < inventario.length; ++i){
-            inventario[i][0] = o++;
-            catalogoPintado[i] = null;
-            catalogoControl[i] = null;
+        while (opcion != 7);
+    }
+
+    /*
+     *  @Funcion: Pide la opcion de la aplicacion que el usuario quiere ejecutar.
+     *            Se asegura que sea un entero entre [1,7]
+     *  @Return: entero que refleja la opcion elejida
+     */
+    public int pedirOpcion (){
+        int opcion = -1;
+        boolean Seguir = true;
+        while(Seguir){
+            opcion = interfaz.askInt(MENU);
+            Seguir = !(1<= opcion && opcion <= 7);
+        }
+        return opcion;
+    }
+
+    /*
+     *  @Funcion: Segun la opcion elegida, ejecuta lo necesario para cumplir.
+     *  @Param: Entero que refleja la opcion por ejecutar
+     */
+    public void ejecutarOpcion(int opcion){
+        switch(opcion){
+            case 1:
+            //Mostrar el inventario completo
+            interfaz.showMessage(inventario.toString());
+            break;
+            case 2:
+            //Mostrar una imagen por numero de figura
+            mostrarPorNumero();
+            break;
+            case 3:
+            inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),1);
+            //Mostrar las imagenes que tienen unas manchas en un rango especifico
+            break;
+            case 4:
+            inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),2);
+            //Mostrar las imagenes que tienen una escala en un rango especifico
+            break;
+            case 5:
+            inventario.buscarDimensiones(interfaz.askInt(MIN),interfaz.askInt(MAX));
+            //Mostrar las imagenes que tienen una dimension original en un rango especifico
+            break;
+            case 6:
+            inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),3);
+            //Mostrar las imagenes que tienen un area en un rango especifico.
+            break;
+            case 7:
+            // Cierre de la aplicacion
+            salir();
+            break;
         }
     }
 
     /*
-     *  @Funcion: Metodo que al ser llamado ordena el inventario segun la cantidad de manchas 
-     *  (solo se mueven los datos de las figuras, no el numero de estas), y segun el zoom en caso
-     *  de empate. Se utiliza el algoritmo de seleccion.
+     *  @Funcion: Pide al usuario el numero de figura que desea ver y se la muestra.
      */
-    public void ordenarInventario(){
-        int elMasMayor = 0;
-        int temporal = 0;
-        for(int f = 0; f< inventario.length; ++f){
-            elMasMayor = encontrarMayor(f,1);
-            if(inventario[f][1] != inventario[elMasMayor][1]){
-                for(int i=1; i<7; ++i){    
-                    temporal = inventario [f][i];
-                    inventario[f][i] = inventario[elMasMayor][i];
-                    inventario[elMasMayor][i] = temporal;
-                }
-            }
-        }
-        int siguiente = 0;
-        temporal = 0;
-        for(int f = 0; f < (cantFiguras-1); ++f){
-            siguiente = ++f;
-            if(inventario[f][1]==inventario[siguiente][1]){
-                if(inventario[f][2] < inventario[siguiente][2]){
-                    for(int i=1; i<7; ++i){    
-                        temporal = inventario [f][i];
-                        inventario[f][i] = inventario[siguiente][i];
-                        inventario[siguiente][i] = temporal;
-                    }
-                }
-            }
-         }
+    public void mostrarPorNumero(){
+        int n = -1; 
+        do{
+            n = interfaz.askInt("Ingrese el numero de la figura que desea ver");
+        }while( n < 0 || n > inventario.getCantFiguras());
+        inventario.mostrarPorNumero(n);
     }
 
     /*
-     *  @Funcion: Encuentra el dato mayor de una caracteristica.
-     *  @Param: fila es desde cual fila se compara y columna la caracteristica en comparacion.
-     *  @Return: Entero que refleja la posicion de la figura cuyo dato el mayor encontrado.
+     *  @Funcion: Metodo de cierre de la aplicacion. Se despide
      */
-    public int encontrarMayor(int fila, int columna){
-        int posicion = fila;
-        int siguiente = 0;
-        for(int f = fila; f < inventario.length; ++f){
-            if(inventario[posicion][columna] < inventario[f][columna]){
-                posicion = f;
-            }
-        }
-        return posicion;
-    }
-
-    /*
-     *  @Funcion: Muestra la imagen de la figura del catalogo pintado seleccionada.
-     *  @Param: Entero n que refleja el numero de figura desde el inventario.
-     */
-    public void mostrarPorNumero( int n ){
-        if( n <= cantFiguras){
-            for(int f = 0; f < inventario.length; ++f){
-                for(int c = 0; c < inventario[0].length; ++c){
-                    if(inventario[f][0] == n){
-                        catalogoPintado[inventario[f][6]].dibujar(); 
-                    }
-                }
-            }
-        }
-    }
-
-    /*
-     *  @Funcion: Metodo muestra las imagenes de las figuras segun un rango de una caracteristica
-     *  en especifico.
-     *  @Param: min y max reflejan el rango y la caracteristica la columna a buscar. 
-     */
-    public void buscarRango(int min, int max, int caracteristica){
-        if(posicionValida(0 , caracteristica)){
-            for(int f=0; f < inventario.length; ++f){
-                if (inventario[f][caracteristica] > min && inventario[f][caracteristica] < max){
-                    catalogoPintado[inventario[f][6]].dibujar();
-                } 
-            }
-        }
-    }
-
-    /*
-     *  @Funcion: Metodo muestra la imagen de las figuras cuyas dimensiones se encuentran en un 
-     *  rango.
-     *  @Param: min y max son enteros que reflejan el rango.
-     */
-    public void buscarDimensiones(int min, int max){
-        int dimension = min*max;
-        for(int fila = 0; fila < inventario.length; ++fila){
-            int dimensionImagen = inventario[fila][4]*inventario[fila][5];
-            if(dimensionImagen<dimension){
-                catalogoPintado[inventario[fila][6]].dibujar();
-            }
-        }
-    }
-
-    /*
-     *  @Funcion: Se asegura que se esta accediendo a una posicion valida del inventario.
-     *  @Param: f y c siendo la posicion que se quiere acceder.
-     *  @Return: Valor boolean que refleja el resultado.
-     */
-    public boolean posicionValida(int f, int c){
-        return f >= 0 && f < inventario.length && c >=0 && c < inventario[f].length;
-    }
-
-    /*
-     *  @Funcion: Metodo que realiza el archivo de texto que contiene la informacion del inventrio.
-     */
-    public void crearArchivo(){
-        try{
-            archivo = new PrintWriter ("Inventario.txt"); 
-        }catch(Exception e){
-            System.err.println("Error al crear archivo con la informacion");  
-        }
-        archivo.print(inventario);
-        archivo.close();
-    }
-
-    /*
-     *  @Funcion: Metodo toString que escribe toda la informacion dentro de inventario.
-     *  @Return: Variable String que refleja toda la informacion.
-     */
-    public String toString(){
-        String tira = "\tInventario.\nNum.figura\tManchas\tZoom\tArea\tAncho\tAltura\tPosicion en Catalogo\n";
-        for(int f= 0; f<inventario.length; ++f){
-            tira +="\t";
-            for( int c=0; c < inventario[f].length; ++c){
-                tira+= inventario[f][c] + "\t";
-            }
-            tira += "\n";
-        }
-        return tira;
-    }
-
-    public void setImagenPintada(int [][]imagen, int f){
-        int posicionEnCatalogo = f;
-        if(catalogoPintado != null && posicionValida(f, 0)){
-            catalogoPintado[f] = new Imagen(imagen);
-            inventario[f][6] = posicionEnCatalogo;
-        }
-    }
-
-    public void setImagenControl(int [][]imagen, int f){
-        int posicionEnCatalogo = f;
-        if(catalogoControl != null && posicionValida(f, 0)){
-            catalogoControl[f] = new Imagen(imagen);
-            inventario[f][6] = posicionEnCatalogo;
-        }
-    }
-
-    public int[][] getMatrizControl(int f){
-        return catalogoControl[f].getMatriz();
-    }
-
-    public int[][] getMatrizPintada(int f){
-        return catalogoPintado[f].getMatriz();
-    }
-
-    public int getCantFiguras(){
-        return cantFiguras;
-    }
-
-    public void setAlgo(int f, int c, int dato){
-        if(posicionValida(f , c)){
-            inventario[f][c] = dato;
-        }
-    }
-
-    public int getAlgo(int f, int c){
-        int dato = -1;
-        if(posicionValida(f,c)){
-            dato = this.inventario[f][c];
-        }
-        return dato;
+    public void salir(){
+        interfaz.showMessage("Gracias por la visita!");
     }
 }
