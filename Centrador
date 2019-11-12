@@ -111,7 +111,7 @@ public class Centrador{
     }
 
     /*
-     *  @Funcion: Añade una fila a la izquierda de la matriz.
+     *  @Funcion: Añade una fila a arriba de la matriz.
      *  @Param: La matriz a la cual se le añade la fila.
      *  @Return: Devuelve la matriz con la fila añadida
      */
