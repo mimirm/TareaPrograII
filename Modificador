@@ -67,7 +67,7 @@ public class Modificador{
             }
         }
 
-        inventario.meterImagenPintada( destino, n);
+        inventario.meterImagenPintada( centrar(hacerZoom(destino)), n);
     }
 
     public int findColumnasMayor(){
