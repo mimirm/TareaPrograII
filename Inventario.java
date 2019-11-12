@@ -12,11 +12,6 @@ public class Inventario{
     private int cantFiguras;
 
     public Inventario(int n){
-        try{
-            archivo = new PrintWriter ("Inventario.txt"); //no se si esto se quedara abierto desde que se llama al contructor.
-        }catch(Exception e){
-            System.err.println("Error al crear archivo con la informacion");  
-        }
         cantFiguras = n;
         inventario = new int [n][7];
         /*
@@ -70,11 +65,10 @@ public class Inventario{
                         temporal = inventario [f][i];
                         inventario[f][i] = inventario[siguiente][i];
                         inventario[siguiente][i] = temporal;
-                        //System.out.println("Entra a hacer swap");
                     }
                 }
-                }
             }
+         }
     }
 
     /*
@@ -152,6 +146,11 @@ public class Inventario{
      *  @Funcion: Metodo que realiza el archivo de texto que contiene la informacion del inventrio.
      */
     public void crearArchivo(){
+        try{
+            archivo = new PrintWriter ("Inventario.txt"); 
+        }catch(Exception e){
+            System.err.println("Error al crear archivo con la informacion");  
+        }
         archivo.print(inventario);
         archivo.close();
     }
