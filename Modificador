@@ -46,31 +46,25 @@ public class Modificador{
                 }
             }
         } 
-        for (int f = control.length ; f < 0  && filaFinal == 0; --f){
-            for(int c = 0; c < control[0].length && filaInicial ==0; ++c){
+        for (int f = (control.length-1) ; f > 0  && filaFinal == 0; --f){
+            for(int c = (control[0].length-1); c > 0 && filaFinal ==0; --c){
                 if( control[f][c] == -3 ){
                     filaFinal = f + 1;
                 }
             }
         } 
-        for (int c = control[0].length; c < 0 && columnaInicial == 0; --c){
-            for(int f = 0; f < control.length && columnaInicial == 0; ++f){
+        for (int c = (control[0].length-1); c > 0 && columnaFinal == 0; --c){
+            for(int f = (control.length-1); f > 0  && columnaFinal == 0; --f){
                if( control[f][c] == -3 ){
                     columnaFinal = c + 1;
                 }
             }
         } 
-        for (int f = 0; f < destino.length && f < filaFinal; ++f){
-            for(int c = 0; c < destino[0].length && c < columnaFinal ; ++c){
+        
+        for (int f = 0; f < destino.length && f <= filaFinal; ++f){
+            for(int c = 0; c < destino[0].length && c <= columnaFinal ; ++c){
                destino[f][c] = pintada [filaInicial + f][columnaInicial + c];
             }
-        }
-        //Para prueba
-        for(int f = 0; f < destino.length; f++){
-            for(int c = 0; c < destino[f].length; c++){
-                System.out.print(" "+destino[f][c]); 
-            } 
-            System.out.println("");
         }
 
         inventario.meterImagenPintada( destino, n);
