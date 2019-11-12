@@ -20,7 +20,6 @@ public class Convertidor{
             entrada = nombreImagen;
         }
         i = new Imagen(entrada);
-        i.dibujar();
         original = i.getMatriz();
         fondo = original[0][0];
         lienzo = new int [original.length] [original[0].length];
