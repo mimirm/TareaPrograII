@@ -1,3 +1,12 @@
+ /* @esta clase le hace zoom a las figuras del inventario y las
+ *  vuelve a almacenar
+ * 
+ * 
+ *  
+ *  
+ */
+
+
 public class Zoom{
     public static final int [] SUMA_F = {-1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {0, 1, 1, 1, 0,-1,-1,-1 };
