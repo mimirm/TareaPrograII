@@ -1,12 +1,18 @@
-import javax.swing.JOptionPane;
+import java.util.Scanner;
 public class Interfaz {
     public static final String  ERROR_MESSAGE = "Error! Ingreso no valido.\nIntente de nuevo. ";
-     /*
+    private Scanner input;
+    
+    public Interfaz (){
+        input = new Scanner(System.in);
+    }
+    
+    /*
      *   @Funcion: Este metodo le muestra el mensaje al usuario
      *   @Param: String que contiene el mensaje que se desea mostrar
      */
     public void showMessage(String mensaje){
-        JOptionPane.showMessageDialog(null, mensaje);
+        System.out.println(mensaje);
     }
 
     /*
@@ -18,26 +24,21 @@ public class Interfaz {
      */
     public int askInt(String mensaje){
         int numero = -1;
-        
+        String entrada = "";
         do{
-            String entrada = JOptionPane.showInputDialog(
-                            null,
-                            mensaje,
-                            JOptionPane.QUESTION_MESSAGE);
-        
+            System.out.println("\n"+mensaje);
+            entrada = input.next();
             try{
                numero = Integer.parseInt(entrada);
                if( numero < 0 ){
                    numero = -1;
-                   JOptionPane.showMessageDialog( null, ERROR_MESSAGE);
+                   System.out.println(ERROR_MESSAGE);
                }
             }
             catch(Exception e){
-               JOptionPane.showMessageDialog( null, ERROR_MESSAGE);
+               System.out.println(ERROR_MESSAGE);
             }
         }while (numero == -1);
-        
         return numero;
     }
-
 }
