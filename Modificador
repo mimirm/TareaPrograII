@@ -1,13 +1,14 @@
 /*
- * este bro recorta, centra y hace zoom
+ * Esta clase es la encargada de recortar las matrices pintadas segun 
+ * las dimensiones mas grandes del inventario
  */
-public class Modificador{
+public class Recortador{
     public static final int [] SUMA_F = { -1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
     private Inventario inventario;
     private int filasMayor, columnasMayor;
 
-    public Modificador (Inventario inventario){
+    public Recortador (Inventario inventario){
         this.inventario = inventario;
         filasMayor = findFilasMayor();
         columnasMayor = findColumnasMayor();
@@ -27,12 +28,6 @@ public class Modificador{
             for(int c = 0; c < destino[0].length; ++c){
                 destino[f][c] = 0;
             }
-        }
-        for(int f = 0; f < control.length; f++){
-            for(int c = 0; c < control[f].length; c++){
-                System.out.print(" "+control[f][c]); 
-            } 
-            System.out.println("");
         }
         int filaInicial = 0;
         int columnaInicial = 0;
@@ -66,11 +61,6 @@ public class Modificador{
                 }
             }
         } 
-        System.out.println(filaInicial);
-        System.out.println(columnaInicial);
-        System.out.println(filaFinal);
-        System.out.println(columnaFinal);
-
         for (int f = 0; f < destino.length && f <= filaFinal ; ++f){
             for(int c = 0; c < destino[0].length && c <= columnaFinal ; ++c){
                 if(valido((filaInicial-1 )+ f,(columnaInicial-1 )+ c, pintada)){
@@ -79,12 +69,6 @@ public class Modificador{
             }
         }
         llenarVacio(destino);
-        for(int f = 0; f < destino.length; f++){
-            for(int c = 0; c < destino[0].length; c++){
-                System.out.print(" "+destino[f][c]); 
-            } 
-            System.out.println("");
-        }
         inventario.meterImagenPintada( destino, n);
     }
 
