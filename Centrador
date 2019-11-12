@@ -1,0 +1,140 @@
+/*
+ * Esta clase se encarga de centras las figuras recortadas y amplificadas que estas
+ * en el catalogo pintado.
+ */
+public class Centrador{
+    private Inventario inventario;
+     
+    public Centrador( Inventario inventario){
+        this.inventario = inventario;
+    }
+    
+    public void centrarFiguras(){
+        for(int n = 0; n < inventario.getCantFiguras(); ++n){
+            centrarHorizontal( inventario.getMatrizPintada(n));
+            centrarVertical( inventario.getMatrizPintada(n) );
+        }
+    }
+    
+    public void centrarHorizontal( int [][] m ){
+        int bordeIzq = 0;
+        int bordeDer = 0;
+        int fondo = m[0][0];
+        int medio = 0;
+        int [][] centrada = new int[m.length][m[0].length];
+        for (int f = 0; f < m.length; ++f){
+            for(int c = 0; c < m[0].length ; ++c){
+                centrada[f][c] = fondo;
+            }
+        }  
+        for (int c = 0; c < m[0].length && bordeIzq == 0; ++c){
+            for(int f = 0; f < m.length && bordeIzq == 0; ++f){
+                if( m[0][0] != fondo){
+                    bordeIzq = c;
+                }
+            }
+        } 
+        for (int c = (m[0].length-1); c > 0 && bordeDer == 0; --c){
+            for(int f = (m.length-1); f > 0  && bordeDer == 0; --f){
+                if( m[f][c] != fondo ){
+                    bordeDer = m.length - 1 - c;
+                }
+            }
+        }
+        medio = (bordeIzq + bordeDer)/2;
+        System.out.println("DErecha" + bordeIzq);
+        System.out.println("Izq" +bordeDer);
+        System.out.println("medio "+medio);
+        
+        while(bordeDer != medio && bordeIzq != medio){
+           m = agregarColumnaIzq(m);
+            bordeIzq ++;
+            bordeDer --;
+            System.out.println(bordeIzq);
+            System.out.println(bordeDer);
+        }
+    }
+    
+    public int[][] agregarColumnaIzq( int [][] m){
+        int fondo = m[0][0];
+        int [][] destino = new int[m.length][m[0].length];
+         for (int f = 0; f < destino.length; ++f){
+            for(int c = 0; c < 1 ; ++c){
+                destino[f][c] = fondo;
+            }
+        } 
+        for (int f = 0; f < m.length; ++f){
+            for(int c = 1; c < destino[0].length ; ++c){
+                destino[f][c] = m[f][c-1];
+            }
+        } 
+        toString(m);
+        return destino;
+    }
+    
+    public void centrarVertical(int [][] m){
+        int bordeArriba = 0;
+        int bordeAbajo = 0;
+        int fondo = m[0][0];
+        int medio = 0;
+        int [][] centrada = new int[m.length][m[0].length];
+        for (int f = 0; f < m.length; ++f){
+            for(int c = 0; c < m[0].length ; ++c){
+                centrada[f][c] = fondo;
+            }
+        }  
+        for (int f = 0; f < m.length && bordeArriba == 0; ++f){
+            for(int c = 0; c < m[0].length && bordeArriba == 0; ++c){
+                if( m[f][c] != fondo ){
+                    bordeArriba = f;
+                }
+            }
+        }
+        for (int f = (m.length-1) ; f > 0  && bordeAbajo == 0; --f){
+            for(int c = (m[0].length-1); c > 0 && bordeAbajo ==0; --c){
+                if( m[f][c] != fondo){
+                    bordeAbajo = m.length -1 - f;
+                }
+            }
+        } 
+        medio = (bordeArriba + bordeAbajo)/2;
+        System.out.println("Arriba" + bordeArriba);
+        System.out.println("Abajo" +bordeAbajo);
+        System.out.println("medio "+medio);
+        
+        while(bordeArriba != medio && bordeAbajo != medio){
+            m = agregarFilaArriba(m);
+            bordeArriba ++;
+            bordeAbajo --;
+            System.out.println(bordeArriba);
+            System.out.println(bordeAbajo);
+        }
+    }
+    
+    public int[][] agregarFilaArriba( int [][] m){
+        int fondo = m[0][0];
+        int [][] destino = new int[m.length][m[0].length];
+        for (int f = 0; f < 1; ++f){
+            for(int c = 0; c < destino[0].length ; ++c){
+                destino[f][c] = fondo;
+            }
+        } 
+        for (int f = 1; f < destino.length; ++f){
+            for(int c = 0; c < destino[0].length ; ++c){
+                destino[f][c] = m[f-1][c];
+            }
+        } 
+        toString(m);
+        return destino;
+    }
+    
+    public void toString(int[][] matriz){
+        for(int f = 0; f < matriz.length; f++){
+            for(int c = 0; c < matriz[f].length; c++){
+                System.out.print(" "+matriz[f][c]); 
+            } 
+            System.out.println("");
+        }
+    }
+    
+}
