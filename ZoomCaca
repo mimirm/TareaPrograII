@@ -26,17 +26,19 @@ public class Zoom{
                 System.out.println("");
 
             }
-            inventario.meterImagenPintada(hacerZoom(inventario.getMatrizPintada(n),n),n);
             System.out.println("despues");
-            /*
-             * for(int f = 0; f < inventario.getMatrizPintada(n).length; f++){
+            
+            inventario.meterImagenPintada(hacerZoom(inventario.getMatrizPintada(n),n),n);
+            
+            
+              for(int f = 0; f < inventario.getMatrizPintada(n).length; f++){
             for(int c = 0; c < inventario.getMatrizPintada(n)[0].length; c++){
             System.out.print(" "+inventario.getMatrizPintada(n)[f][c]); 
             } 
             System.out.println("");
 
             }
-             */
+            
         }
     }
 
@@ -49,12 +51,17 @@ public class Zoom{
             }
         }
         int zoom = 0;
+        matrizZoomeada= matriz;
         while(seguir){
             try{
-                matrizZoomeada = zoomear(matriz);
+                matrizZoomeada = zoomear(matrizZoomeada);
                 ++zoom;
             } catch(Exception e){
                 seguir = false;
+                if(zoom == 0){
+                matrizZoomeada = matriz;
+                }
+                
             }
         }
         inventario.setAlgo(n, 2, (int)(Math.pow(2,zoom)));
