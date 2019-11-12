@@ -1,24 +1,37 @@
+/*
+*   Clase encargada de llenar los datos de cantidad de manchas, area, altura y ancho, en el 
+*   inventario.
+*/
 public class BuscaDatos{
     public static final int [] SUMA_F = { -1,-1, 0, 1, 1, 1, 0,-1 };
     public static final int [] SUMA_C = {  0, 1, 1, 1, 0,-1,-1,-1 };
     private Inventario inventario;
+    
     public BuscaDatos( Inventario inventario){
         this.inventario = inventario;
     }
-
+    
+    /*
+     *  @Funcion: Llena el inventario con los datos de las figuras guardadas en catalogo.
+     *  A excepcion del zoom, ya que este se calcula despues.
+     */
     public void llenarInventario(){
         int n = inventario.getCantFiguras(); 
         for(int i= 0; i< n; ++i){
             inventario.setAlgo( i, 1, contarManchas(inventario.getMatrizControl(i)));
-            //llenarZoom( i, 2, kfdjhghfdgs);
             inventario.setAlgo( i, 3, medirArea(inventario.getMatrizControl(i)));
-            inventario.setAlgo( i, 4, findAncho(inventario.getMatrizControl(i)));
-            inventario.setAlgo( i, 5,findAltura(inventario.getMatrizControl(i)));
+            inventario.setAlgo( i, 4, findColumnas(inventario.getMatrizControl(i)));
+            inventario.setAlgo( i, 5,findFilas(inventario.getMatrizControl(i)));
         }
     }
-
-    public int findAltura(int [][] m){
-        int altura = 0;
+    
+    /*
+     *  @Funcion: Encuentra la altura de la figura.
+     *  @Param: Matriz de enteros donde esta guardada la figura
+     *  @Return: Entero que expresa la altura en terminos de cantidad de pixeles.
+     */
+    public int findFilas(int [][] m){
+        int filas = 0;
         int arriba = 0;
         int abajo = m.length -1;
         for (int f = 0; f < m.length; ++f){
@@ -31,26 +44,17 @@ public class BuscaDatos{
                 }
             } 
         }  
-        altura = arriba - abajo +1;
-        return altura;
+        filas = arriba - abajo +1;
+        return filas;
     }
-
-    public int busquedaAscendente(int [][] m){
-        int borde = 0;
-        boolean seguir = true;
-        for (int f = m.length -1 ; f > 0 && seguir; --f){
-            for(int c = 0 ; c > m[0].length && seguir; ++c){ 
-                if (m[f][c] == -3 ){
-                    borde = f;
-                    seguir = false;
-                }
-            } 
-        }
-        return borde;
-    }
-
-    public int findAncho(int [][] m){
-        int ancho = 0;
+    
+    /*
+     *  @Funcion: Encuentra el ancho de las figuras.
+     *  @Param: Matriz de enteros donde esta guardada la figura.
+     *  @Return: Entero que refleja el ancho en terminos de pixeles.
+     */
+    public int findColumnas(int [][] m){
+        int columnas = 0;
         int der = m[0].length;
         int izq = 0;
         for (int f = 0; f < m.length; ++f){
@@ -63,10 +67,15 @@ public class BuscaDatos{
                 }
             } 
         }  
-        ancho = izq - der + 1;
-        return ancho;
+        columnas = izq - der + 1;
+        return columnas;
     }
 
+    /*
+     *  @Funcion: Mide el area, cuenta aquellos pixeles que pertenezcan a la figura.
+     *  @Param: Matriz de enteros donde esta la figura.
+     *  @Return: Entero que refleja el area en terminos de pixeles.
+     */
     public int medirArea(int[][] control){
         int area = 0;
         for (int i = 0; i < control.length; ++i){
@@ -78,26 +87,13 @@ public class BuscaDatos{
         } 
         return area;
     }
-
-    public boolean direccionValida(int f, int c, int d, int[][] matriz){
-        return (matriz != null) && posicionValida(f+SUMA_F[d], c+SUMA_C[d], matriz);
-    }
-
-    public boolean posicionValida(int f, int c, int[][]matriz){
-        return (matriz != null) && (f >= 0) && (f < matriz.length) && (c >= 0) && (c < matriz[f].length);
-    }
-
-    private void borrarMancha(int f, int c, int[][] control){
-        if( posicionValida( f, c, control ) &&  (control[f][c] == -5) ){
-            control[f][c] = -4;
-            for(int d = 0; d < 8; ++d){
-                if( direccionValida( f, c, d, control ) ){
-                    borrarMancha(f+SUMA_F[d], c+SUMA_C[d], control);
-                }
-            }
-        }
-    }
-
+    
+    /*
+     *  @Funcion: Cuenta la cantidad de manchas de la figura, cuando encuentra una mancha, 
+     *  aumenta el contador y borra esa mancha para no volver a contarla.
+     *  @Param: Matriz de enteros donde esta la figura.
+     *  @Return: Entero que refleja la cantidad de manchas, el contador.
+     */
     public int contarManchas(int[][] control){
         int manchas = 0;
         for (int f = 0; f < control.length; ++f){
@@ -109,5 +105,41 @@ public class BuscaDatos{
             }
         } 
         return manchas;
+    }
+    
+     /*
+     *  @Funcion: Metodo recursivo que borra la mancha encontrada mientras se contaban 
+     *  las manchas.
+     *  @Param: f y c siendo el punto donde se encontro la mancha, y la matriz de enteros
+     *  donde esta la figura siendo analizada.
+     */
+    private void borrarMancha(int f, int c, int[][] control){
+        if( posicionValida( f, c, control ) &&  (control[f][c] == -5) ){
+            control[f][c] = -4;
+            for(int d = 0; d < 8; ++d){
+                if( direccionValida( f, c, d, control ) ){
+                    borrarMancha(f+SUMA_F[d], c+SUMA_C[d], control);
+                }
+            }
+        }
+    }
+    
+    /*
+     *  @Funcion: Se asegura que la direccion es valida.
+     *  @Param: f y c siendo el punto de partida, d la direccion y la matriz de enteros
+     *  en analisis.
+     *  @Return: valor booleano que refleja si es valida o no la direccion.
+     */
+    public boolean direccionValida(int f, int c, int d, int[][] matriz){
+        return (matriz != null) && posicionValida(f+SUMA_F[d], c+SUMA_C[d], matriz);
+    }
+    
+    /*
+     *  @Funcion: Se asegura que se esta accediendo auna posicion valida de la matriz
+     *  @Param: f y c siendo la posicion de la matriz.
+     *  @Return: Valor booleano que refleja si es valida o no la posicion.
+     */
+    public boolean posicionValida(int f, int c, int[][]matriz){
+        return (matriz != null) && (f >= 0) && (f < matriz.length) && (c >= 0) && (c < matriz[f].length);
     }
 }
