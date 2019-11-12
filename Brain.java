@@ -23,7 +23,7 @@ public class Brain{
         recortador = new Recortador (inventario);
         recortador.run();   
         zoomeador = new Zoom (inventario);
-        //zoomeador.run();
+        zoomeador.run();
     }
     
     /*
@@ -62,9 +62,11 @@ public class Brain{
         switch(opcion){
             case 1:
                 //Mostrar el inventario completo
+                interfaz.showMessage(inventario.toString());
             break;
             case 2:
                 //Mostrar una imagen por numero de figura
+                mostrarPorNumero();
             break;
             case 3:
                 inventario.buscarRango(interfaz.askInt(MIN),interfaz.askInt(MAX),1);
@@ -87,6 +89,17 @@ public class Brain{
                 salir();
             break;
         }
+    }
+    
+     /*
+     *  @Funcion: Pide al usuario el numero de figura que desea ver y se la muestra.
+     */
+    public void mostrarPorNumero(){
+        int n = -1; 
+        do{
+            n = interfaz.askInt("Ingrese el numero de la figura que desea ver");
+        }while( n < 0 || n > inventario.getCantFiguras());
+        inventario.mostrarPorNumero(n);
     }
     
     /*
