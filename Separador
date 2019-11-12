@@ -30,7 +30,7 @@ public class Separador{
     }
 
     /*
-     * @Función: verifica que la poscion de la matriz lienzo sea valida
+     * @Función: verifica que la posicion de la matriz lienzo sea valida
      * @Param: recibe la posicion exacta
      * @Return: devuelve un boolean informando si es valida o no 
      */
